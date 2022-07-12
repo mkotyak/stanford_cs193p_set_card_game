@@ -21,6 +21,7 @@
 		FFB75B49287C2CC7005E2CD2 /* ContentColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B48287C2CC7005E2CD2 /* ContentColor.swift */; };
 		FFB75B4B287C2CFC005E2CD2 /* NumOfShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4A287C2CFC005E2CD2 /* NumOfShapes.swift */; };
 		FFB75B4D287C2D21005E2CD2 /* Shading.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4C287C2D21005E2CD2 /* Shading.swift */; };
+		FFB75B50287D6F15005E2CD2 /* DeckBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		FFB75B48287C2CC7005E2CD2 /* ContentColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentColor.swift; sourceTree = "<group>"; };
 		FFB75B4A287C2CFC005E2CD2 /* NumOfShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumOfShapes.swift; sourceTree = "<group>"; };
 		FFB75B4C287C2D21005E2CD2 /* Shading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shading.swift; sourceTree = "<group>"; };
+		FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 		FFB75B26287BF92D005E2CD2 /* Set */ = {
 			isa = PBXGroup;
 			children = (
+				FFB75B4E287D6EEE005E2CD2 /* Utilities */,
 				FFB75B45287C2C83005E2CD2 /* Enums */,
 				FFB75B38287C0ADE005E2CD2 /* Game */,
 				FFB75B35287C0AAB005E2CD2 /* Models */,
@@ -119,6 +122,14 @@
 				FFB75B4C287C2D21005E2CD2 /* Shading.swift */,
 			);
 			path = Enums;
+			sourceTree = "<group>";
+		};
+		FFB75B4E287D6EEE005E2CD2 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,6 +214,7 @@
 				FFB75B3C287C0B12005E2CD2 /* SetGameView.swift in Sources */,
 				FFB75B4D287C2D21005E2CD2 /* Shading.swift in Sources */,
 				FFB75B44287C2C4D005E2CD2 /* CardContentModel.swift in Sources */,
+				FFB75B50287D6F15005E2CD2 /* DeckBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

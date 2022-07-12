@@ -5,25 +5,8 @@ class SetGameViewModel: ObservableObject {
     @Published private var gameModel: SetGameModel
 
     init() {
-        gameModel = SetGameModel()
-        createDeckOfCards()
-    }
-
-    func createDeckOfCards() {
-        for shape in Shape.allCases {
-            for color in ContentColor.allCases {
-                for numOfShapes in NumOfShapes.allCases {
-                    for shading in Shading.allCases {
-                        gameModel.cards.append(SetGameModel.Card(content: CardContentModel(
-                            shape: shape,
-                            numOfShapes: numOfShapes,
-                            shading: shading,
-                            color: color)
-                        ))
-                    }
-                }
-            }
-        }
+        gameModel = SetGameModel(deckOfCards: DeckBuilder().createDeckOfCards())
+        // added print to make sure that 81 cards were created
         print(gameModel.cards.count)
     }
 }

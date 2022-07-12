@@ -10,7 +10,7 @@ struct SetGameModel {
     
     var cards: [Card]
     
-    init() {
-        cards = []
+    init(deckOfCards: [SetGameModel.Card]) {
+        cards = deckOfCards
     }
 }
