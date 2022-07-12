@@ -3,7 +3,7 @@ import SwiftUI
 struct StartGameView: View {
     var body: some View {
         NavigationView {
-            NavigationLink(destination: SetGameView(gameViewModel: SetGameViewModel())) {
+            NavigationLink(destination: SetGameView(gameViewModel: SetGameViewModel(deckBuilder: DeckBuilder()))) {
                 Text("Start the game")
                     .font(.largeTitle)
                     .frame(width: 280, height: 55)

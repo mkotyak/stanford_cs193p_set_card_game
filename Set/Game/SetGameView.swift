@@ -10,6 +10,6 @@ struct SetGameView: View {
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        SetGameView(gameViewModel: SetGameViewModel())
+        SetGameView(gameViewModel: SetGameViewModel(deckBuilder: DeckBuilder()))
     }
 }
