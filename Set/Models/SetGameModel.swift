@@ -1,16 +1,18 @@
 import Foundation
 
 struct SetGameModel {
-    struct Card {
-        var content: CardContentModel
+    struct Card: Identifiable {
+        let id = UUID()
+        let content: CardContentModel
         var isActive = false // true when user tap on a card
         // I'm not sure about naming
         var isSelected = false // true when user found a set
+        var isUsed = false // true when card has been displayed on the screen
     }
     
-    var cards: [Card]
+    var fullDeck: [Card]
     
-    init(deckOfCards: [SetGameModel.Card]) {
-        cards = deckOfCards
+    init(_ deckOfCards: [SetGameModel.Card]) {
+        fullDeck = deckOfCards
     }
 }

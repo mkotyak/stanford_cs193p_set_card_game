@@ -17,6 +17,6 @@ class DeckBuilder {
                 }
             }
         }
-        return deckOfCards
+        return deckOfCards.shuffled()
     }
 }
