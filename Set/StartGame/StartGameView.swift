@@ -1,9 +1,11 @@
 import SwiftUI
 
 struct StartGameView: View {
+    let gameViewBuilder: GameViewBuilder
+    
     var body: some View {
         NavigationView {
-            NavigationLink(destination: SetGameView(gameViewModel: SetGameViewModel(deckBuilder: DeckBuilder()))) {
+            NavigationLink(destination: gameViewBuilder.build()) {
                 Text("Start the game")
                     .font(.largeTitle)
                     .frame(width: 280, height: 55)
@@ -15,9 +17,6 @@ struct StartGameView: View {
         }
     }
 }
-
-
-
 
 
 

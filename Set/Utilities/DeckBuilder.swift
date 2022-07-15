@@ -1,13 +1,13 @@
 import Foundation
 
 class DeckBuilder {
-    func createDeckOfCards() -> [SetGameModel.Card] {
-        var deckOfCards: [SetGameModel.Card] = []
-        for shape in Shape.allCases {
+    func createDeck() -> [CardModel] {
+        var deck: [CardModel] = []
+        for shape in ContentShape.allCases {
             for color in ContentColor.allCases {
                 for numOfShapes in NumOfShapes.allCases {
                     for shading in Shading.allCases {
-                        deckOfCards.append(SetGameModel.Card(content: CardContentModel(
+                        deck.append(CardModel(content: CardContentModel(
                             shape: shape,
                             numOfShapes: numOfShapes,
                             shading: shading,
@@ -17,6 +17,6 @@ class DeckBuilder {
                 }
             }
         }
-        return deckOfCards.shuffled()
+        return deck.shuffled()
     }
 }

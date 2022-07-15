@@ -1,6 +1,6 @@
 import Foundation
 
-enum Shape: CaseIterable {
+enum ContentShape: CaseIterable {
     case diamond
     case oval
     case squiggle
