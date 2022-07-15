@@ -1,7 +1,7 @@
 import Foundation
 
 struct CardContentModel {
-    var shape: Shape
+    var shape: ContentShape
     var numOfShapes: NumOfShapes
     var shading: Shading
     var color: ContentColor
