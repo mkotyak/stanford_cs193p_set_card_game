@@ -4,20 +4,20 @@ struct CardView: View {
     @ObservedObject var cardViewModel: CardViewModel
 
     var body: some View {
-        ZStack {
-            let shape = RoundedRectangle(cornerRadius: 15)
-            shape.fill(cardViewModel.backroundColor)
-            shape.strokeBorder(lineWidth: 2).foregroundColor(cardViewModel.strokeColor)
-            VStack {
-                /// I get "Non-constant range: argument must be an integer literal" warning
-                /// on the 16th line, but don't know how to avoid it
-                ForEach(0 ..< cardViewModel.numOfShapes) { _ in
-                    Text(cardViewModel.shape)
-                    Text(cardViewModel.shading)
-                    Text("-----------")
+        GeometryReader { geometry in
+            ZStack {
+                let shape = RoundedRectangle(cornerRadius: 15)
+                shape.fill(cardViewModel.backroundColor)
+                shape.strokeBorder(lineWidth: 2).foregroundColor(cardViewModel.strokeColor)
+                VStack {
+                    ForEach(0 ..< cardViewModel.numOfShapes) { _ in
+                        cardViewModel.shape
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: min(geometry.size.height, geometry.size.width) * 0.8)
+                    }
+                    .foregroundColor(cardViewModel.contentColor)
                 }
-                .font(.system(size: 10))
-                .foregroundColor(cardViewModel.contentColor)
             }
         }
         .padding()

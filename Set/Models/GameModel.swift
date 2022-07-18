@@ -1,15 +1,35 @@
 import Foundation
 
 struct GameModel {
-    var deck: [CardModel]
-    var cardsOnTheScreen: [CardModel]
-    var playerCards: [CardModel]
-    var playedCards: [CardModel]
+    var deck: [CardModel] = []
+    var cardsOnTheScreen: [CardModel] = []
+    var playerCards: [CardModel] = []
+    var playedCards: [CardModel] = []
+    var deckBuilder: DeckBuilder
     
-    init(_ deck: [CardModel]) {
-        var deck = deck
+    init(deckBuilder: DeckBuilder) {
+        self.deckBuilder = deckBuilder
+        startNewGame()
+    }
+    
+    mutating func dealThreeMoreCards() {
+        guard !deck.isEmpty else {
+            return
+        }
+
+        for _ in 0 ..< min(3, deck.count) {
+            let removedCard = deck.removeFirst()
+            cardsOnTheScreen.append(removedCard)
+        }
+    }
+    
+    mutating func startNewGame() {
+        if !cardsOnTheScreen.isEmpty {
+            resetGame()
+        }
+        var deck = deckBuilder.createDeck()
         var cardsOnTheScreen: [CardModel] = []
-        for _ in 1...8 {
+        for _ in 1 ... 12 {
             let removedCard = deck.removeFirst()
             cardsOnTheScreen.append(removedCard)
         }
@@ -20,23 +40,25 @@ struct GameModel {
         playedCards = []
     }
     
-    mutating func dealThreeMoreCards() {
-        guard !deck.isEmpty else { return }
-        
-        if deck.count >= 3 {
-            for _ in 1...3 {
-                let removedCard = deck.removeFirst()
-                cardsOnTheScreen.append(removedCard)
-            }
-        } else if deck.count < 3 {
-            for _ in 1...deck.count {
-                let removedCard = deck.removeFirst()
-                cardsOnTheScreen.append(removedCard)
-            }
+    private mutating func resetGame() {
+        deck = []
+        cardsOnTheScreen = []
+        playerCards = []
+        playedCards = []
+    }
+    
+    mutating func checkASet(setOfCards: [CardModel]) {
+        print("checkASet func is called")
+        for card in setOfCards {
+            print("checked")
         }
     }
     
-//    func createNewGame() -> GameModel {
-//
-//    }
+    
+    mutating func toggle(cardId: UUID) {
+        guard let chousenIndex = cardsOnTheScreen.firstIndex(where: {$0.id == cardId}) else {
+            return
+        }
+        cardsOnTheScreen[chousenIndex].isActive.toggle()
+    }
 }
