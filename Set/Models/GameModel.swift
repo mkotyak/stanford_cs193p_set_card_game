@@ -70,6 +70,8 @@ struct GameModel {
                     cardsOnTheScreen[index].isSelected = false
                 }
             }
+            // added it here to select 4th card 
+            cardsOnTheScreen[chousenIndex].isSelected.toggle()
             return
         }
         
