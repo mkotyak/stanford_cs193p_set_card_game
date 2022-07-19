@@ -9,7 +9,7 @@ class CardViewModel: ObservableObject {
     }
     
     var backroundColor: Color {
-        if card.isActive {
+        if card.isSelected {
             return Color.gray.opacity(0.2)
         } else {
             return Color.white
@@ -17,7 +17,7 @@ class CardViewModel: ObservableObject {
     }
     
     var strokeColor: Color {
-        if card.isSelected {
+        if card.isMatched {
             return Color.green
         } else {
             return Color.black
@@ -46,25 +46,35 @@ class CardViewModel: ObservableObject {
         }
     }
     
-    var shape: String {
+    var shapeImage: Image {
         switch card.content.shape {
-        case .diamond:
-            return "Damond"
         case .oval:
-            return "Oval"
+            switch card.content.shading {
+            case .stripped:
+                return Image("OvalStripped")
+            case .solid:
+                return Image("OvalFilled")
+            case .open:
+                return Image("OvalEmpty")
+            }
+        case .diamond:
+            switch card.content.shading {
+            case .stripped:
+                return Image("DiamondStripped")
+            case .solid:
+                return Image("DiamondFilled")
+            case .open:
+                return Image("DiamondEmpty")
+            }
         case .squiggle:
-            return "Squiggle"
-        }
-    }
-    
-    var shading: String {
-        switch card.content.shading {
-        case .open:
-            return "with no shading"
-        case .stripped:
-            return "stripped"
-        case .solid:
-            return "filled"
+            switch card.content.shading {
+            case .stripped:
+                return Image("SquiggleStripped")
+            case .solid:
+                return Image("SquiggleFilled")
+            case .open:
+                return Image("SquiggleEmpty")
+            }
         }
     }
 }

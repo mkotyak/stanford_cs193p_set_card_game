@@ -5,24 +5,37 @@ struct GameView: View {
     let cardViewBuilder: CardViewBuilder
 
     var body: some View {
-            VStack {
-                AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
-                    cardViewBuilder.build(for: card)
-                }
-                .navigationBarBackButtonHidden(true)
-                .navigationBarItems(
-                    leading: Button(action: {
-                        gameViewModel.dealThreeMoreCards()
-                    }, label: {
-                        Text("Deal 3 more cards")
-                    }),
-                    trailing: Button(action: {
-                        gameViewModel.createNewGame()
-                    }, label: {
-                        Text("New game")
-                    }))
+        ScrollView {
+            AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
+                cardViewBuilder.build(for: card)
+                    .onTapGesture {
+                        gameViewModel.select(card)
+                    }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button(action: {
+                gameViewModel.dealThreeMoreCards()
+            }, label: {
+                Text("+3 cards")
+                    .frame(width: 95, height: 37)
+                    .background(gameViewModel.moreCardsButtonColor)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            })
+            .disabled(gameViewModel.isMoreCardAvailable),
+            trailing: Button(action: {
+                gameViewModel.startNewGame()
+            }, label: {
+                Text("New game")
+                    .frame(width: 95, height: 37)
+                    .background(.black)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }))
+    }
 }
 
 // struct GameView_Previews: PreviewProvider {

@@ -1,8 +1,12 @@
 import Foundation
 
-struct CardModel: Identifiable {
+struct CardModel: Hashable, Identifiable {
     let id = UUID()
     let content: CardContentModel
-    var isActive = false // true when user tap on a card
-    var isSelected = false // true when user found a set
+    var isSelected = false // true when user tap on a card
+    var isMatched = false // true when user found a set
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id.hashValue)
+    }
 }

@@ -16,7 +16,13 @@ class GameViewModel: ObservableObject {
         self.gameModel = gameModel
     }
     
+    var isMoreCardAvailable: Bool {
+        return deck.isEmpty
+    }
     
+    var moreCardsButtonColor: Color {
+        isMoreCardAvailable ? .gray : .black
+    }
     
     // MARK: - Inents
     
@@ -24,6 +30,15 @@ class GameViewModel: ObservableObject {
         gameModel.dealThreeMoreCards()
     }
     
-    func createNewGame() {
+    func startNewGame() {
+        gameModel.startNewGame()
+    }
+        
+    func select(_ card: CardModel) {
+        guard let chousenCard = cardsOnScreen.first(where: { $0.id == card.id }) else {
+            print("Card is out of scope")
+            return
+        }
+        gameModel.toggleCard(by: chousenCard.id)
     }
 }
