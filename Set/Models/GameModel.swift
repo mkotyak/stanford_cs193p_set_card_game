@@ -57,7 +57,8 @@ struct GameModel {
             return
         }
         
-        cardsOnTheScreen[chousenIndex].state = .isSelected
+        cardsOnTheScreen[chousenIndex].toggleState()
+        
         let selectedCards = cardsOnTheScreen.filter { $0.state == .isSelected }
                 
         guard selectedCards.count >= 3 else {
@@ -84,7 +85,7 @@ struct GameModel {
     private mutating func resetSelectedCards() {
         for index in cardsOnTheScreen.indices {
             if cardsOnTheScreen[index].state == .isSelected {
-                cardsOnTheScreen[index].state = .isNotSelected
+                cardsOnTheScreen[index].toggleState()
             }
         }
     }

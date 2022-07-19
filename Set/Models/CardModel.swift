@@ -8,4 +8,12 @@ struct CardModel: Hashable, Identifiable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id.hashValue)
     }
+    
+    mutating func toggleState() {
+        if state == .isSelected {
+            state = .isNotSelected
+        } else if state == .isNotSelected {
+            state = .isSelected
+        }
+    }
 }
