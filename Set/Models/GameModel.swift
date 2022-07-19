@@ -65,9 +65,10 @@ struct GameModel {
         }
         
         guard selectedCards.count == 3 else {
-            for _ in 0 ..< selectedCards.count {
-                var cardToReset = cardsOnTheScreen.filter { $0.isSelected == true }.first
-                cardToReset?.isSelected.toggle()
+            for index in cardsOnTheScreen.indices {
+                if cardsOnTheScreen[index].isSelected == true {
+                    cardsOnTheScreen[index].isSelected = false
+                }
             }
             return
         }
