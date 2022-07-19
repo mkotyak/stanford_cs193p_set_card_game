@@ -8,11 +8,11 @@ class DeckBuilder {
                 for numOfShapes in NumOfShapes.allCases {
                     for shading in Shading.allCases {
                         deck.append(CardModel(content: CardContentModel(
-                            shape: shape,
-                            numOfShapes: numOfShapes,
-                            shading: shading,
-                            color: color)
-                        ))
+                                shape: shape,
+                                numOfShapes: numOfShapes,
+                                shading: shading,
+                                color: color),
+                            state: .isNotSelected))
                     }
                 }
             }
