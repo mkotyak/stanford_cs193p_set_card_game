@@ -9,7 +9,7 @@ struct GameView: View {
             AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
                 cardViewBuilder.build(for: card)
                     .onTapGesture {
-                        gameViewModel.selectCard(for: card)
+                        gameViewModel.select(card)
                     }
             }
         }
@@ -31,7 +31,7 @@ struct GameView: View {
             }, label: {
                 Text("New game")
                     .frame(width: 95, height: 37)
-                    .background(.blue)
+                    .background(.black)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }))

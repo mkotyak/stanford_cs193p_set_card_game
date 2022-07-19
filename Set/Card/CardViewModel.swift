@@ -9,7 +9,7 @@ class CardViewModel: ObservableObject {
     }
     
     var backroundColor: Color {
-        if card.isActive {
+        if card.isSelected {
             return Color.gray.opacity(0.2)
         } else {
             return Color.white
@@ -17,7 +17,7 @@ class CardViewModel: ObservableObject {
     }
     
     var strokeColor: Color {
-        if card.isSelected {
+        if card.isMatched {
             return Color.green
         } else {
             return Color.black
@@ -46,7 +46,7 @@ class CardViewModel: ObservableObject {
         }
     }
     
-    var shape: Image {
+    var shapeImage: Image {
         switch card.content.shape {
         case .oval:
             switch card.content.shading {

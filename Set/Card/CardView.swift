@@ -10,8 +10,8 @@ struct CardView: View {
                 shape.fill(cardViewModel.backroundColor)
                 shape.strokeBorder(lineWidth: 2).foregroundColor(cardViewModel.strokeColor)
                 VStack {
-                    ForEach(0 ..< cardViewModel.numOfShapes) { _ in
-                        cardViewModel.shape
+                    ForEach(0 ..< cardViewModel.numOfShapes, id: \.self) { _ in
+                        cardViewModel.shapeImage
                             .resizable()
                             .scaledToFit()
                             .frame(width: min(geometry.size.height, geometry.size.width) * 0.8)
