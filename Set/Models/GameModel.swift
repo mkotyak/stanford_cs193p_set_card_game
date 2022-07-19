@@ -65,13 +65,7 @@ struct GameModel {
         }
         
         guard selectedCards.count == 3 else {
-            for index in cardsOnTheScreen.indices {
-                if cardsOnTheScreen[index].isSelected {
-                    cardsOnTheScreen[index].isSelected = false
-                }
-            }
-            // added it here to select 4th card 
-            cardsOnTheScreen[chousenIndex].isSelected.toggle()
+            resetSelectedCards()
             return
         }
         
@@ -85,5 +79,13 @@ struct GameModel {
         print("add delay")
         print("Move cards to appropriate arrays")
         print("And deal 3 more cards")
+    }
+    
+    private mutating func resetSelectedCards() {
+        for index in cardsOnTheScreen.indices {
+            if cardsOnTheScreen[index].isSelected {
+                cardsOnTheScreen[index].isSelected = false
+            }
+        }
     }
 }
