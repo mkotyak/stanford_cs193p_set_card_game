@@ -66,7 +66,7 @@ struct GameModel {
         
         guard selectedCards.count == 3 else {
             for index in cardsOnTheScreen.indices {
-                if cardsOnTheScreen[index].isSelected == true {
+                if cardsOnTheScreen[index].isSelected {
                     cardsOnTheScreen[index].isSelected = false
                 }
             }
