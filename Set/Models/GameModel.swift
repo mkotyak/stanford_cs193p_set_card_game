@@ -72,10 +72,10 @@ struct GameModel {
         }
         
         if checkASet(for: selectedCards) {
-            markAsMached(selectedCards)
+            mark(selectedCards, as: .isMatchedSuccessfully)
             return .successfulMatch
         } else {
-            markAsNotMached(selectedCards)
+            mark(selectedCards, as: .isMatchedUnsuccessfully)
             return .unsuccessfulMatch
         }
     }
@@ -93,24 +93,15 @@ struct GameModel {
         }
     }
     
-    private mutating func markAsNotMached(_ cards: [CardModel]) {
+    private mutating func mark(_ cards: [CardModel], as state: CardState) {
         for card in cards {
             let indecesOfSelectedCard = cardsOnTheScreen.firstIndex(of: card)
             if let index = indecesOfSelectedCard {
-                cardsOnTheScreen[index].state = .isMatchedUnsuccessfully
+                cardsOnTheScreen[index].state = state
             }
         }
     }
-    
-    private mutating func markAsMached(_ cards: [CardModel]) {
-        for card in cards {
-            let indexOfSelectedCard = cardsOnTheScreen.firstIndex(of: card)
-            if let index = indexOfSelectedCard {
-                cardsOnTheScreen[index].state = .isMatchedSuccessfully
-            }
-        }
-    }
-    
+
     mutating func finishTurn(for matchStatus: MatchSuccessStatus) {
         if matchStatus == .successfulMatch {
             for _ in cardsOnTheScreen {
