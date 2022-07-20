@@ -46,15 +46,16 @@ struct GameModel {
         playerCards = []
         playedCards = []
     }
-    
-    private func checkASet(for setOfCards: [CardModel]) -> Bool {
-        print("checkASet func is called")
-        return true
-    }
 
-    mutating func toggleCard(by cardId: UUID) {
+    mutating func toggleCard(by cardId: UUID) -> MatchSuccessStatus {
         guard let chousenIndex = cardsOnTheScreen.firstIndex(where: { $0.id == cardId }) else {
-            return
+            return .noMatch
+        }
+        
+        guard cardsOnTheScreen.allSatisfy({ card in
+            card.state == .isNotSelected || card.state == .isSelected
+        }) else {
+            return .noMatch
         }
         
         cardsOnTheScreen[chousenIndex].toggleState()
@@ -62,31 +63,77 @@ struct GameModel {
         let selectedCards = cardsOnTheScreen.filter { $0.state == .isSelected }
                 
         guard selectedCards.count >= 3 else {
-            return
+            return .noMatch
         }
         
         guard selectedCards.count == 3 else {
-            resetSelectedCards()
-            return
+            resetCardsState()
+            return .noMatch
         }
         
         if checkASet(for: selectedCards) {
-            submitASet(for: selectedCards)
+            markAsMached(selectedCards)
+            return .successfulMatch
+        } else {
+            markAsNotMached(selectedCards)
+            return .unsuccessfulMatch
         }
     }
     
-    private mutating func submitASet(for cards: [CardModel]) {
-        print("Make cards green")
-        print("add delay")
-        print("Move cards to appropriate arrays")
-        print("And deal 3 more cards")
+    private func checkASet(for setOfCards: [CardModel]) -> Bool {
+        guard 2 > 3 || 2 == 2 else {
+            return false
+        }
+        return false
     }
     
-    private mutating func resetSelectedCards() {
+    private mutating func resetCardsState() {
         for index in cardsOnTheScreen.indices {
-            if cardsOnTheScreen[index].state == .isSelected {
-                cardsOnTheScreen[index].toggleState()
+            cardsOnTheScreen[index].state = .isNotSelected
+        }
+    }
+    
+    private mutating func markAsNotMached(_ cards: [CardModel]) {
+        for card in cards {
+            let indecesOfSelectedCard = cardsOnTheScreen.firstIndex(of: card)
+            if let index = indecesOfSelectedCard {
+                cardsOnTheScreen[index].state = .isMatchedUnsuccessfully
             }
+        }
+    }
+    
+    private mutating func markAsMached(_ cards: [CardModel]) {
+        for card in cards {
+            let indexOfSelectedCard = cardsOnTheScreen.firstIndex(of: card)
+            if let index = indexOfSelectedCard {
+                cardsOnTheScreen[index].state = .isMatchedSuccessfully
+            }
+        }
+    }
+    
+    mutating func finishTurn(for matchStatus: MatchSuccessStatus) {
+        if matchStatus == .successfulMatch {
+            for _ in cardsOnTheScreen {
+                let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
+                if let index = index {
+                    playerCards.append(cardsOnTheScreen.remove(at: index))
+                    print("Player cards count is \(playerCards.count)")
+                }
+            }
+        } else if matchStatus == .unsuccessfulMatch {
+            resetCardsState()
+            print("Player cards count is \(playerCards.count)")
+            if !playerCards.isEmpty, playerCards.count >= 3 {
+                for i in 0 ..< 3 {
+                    playedCards.append(playerCards.remove(at: i))
+                    print("Player cards count is \(playerCards.count)")
+                    print("Played cards count is \(playedCards.count)")
+                }
+            }
+        }
+        
+        if cardsOnTheScreen.count < 12 {
+            dealThreeMoreCards()
         }
     }
 }

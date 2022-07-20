@@ -3,6 +3,6 @@ import Foundation
 enum CardState {
     case isSelected
     case isNotSelected
-    case isMatched
-    case isNotMatched
+    case isMatchedSuccessfully
+    case isMatchedUnsuccessfully
 }

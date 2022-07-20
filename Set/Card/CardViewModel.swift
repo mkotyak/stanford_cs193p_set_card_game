@@ -17,9 +17,9 @@ class CardViewModel: ObservableObject {
     }
     
     var strokeColor: Color {
-        if card.state == .isMatched {
+        if card.state == .isMatchedSuccessfully {
             return Color.green
-        } else if card.state == .isNotMatched {
+        } else if card.state == .isMatchedUnsuccessfully {
             return Color.red
         } else {
             return Color.black
