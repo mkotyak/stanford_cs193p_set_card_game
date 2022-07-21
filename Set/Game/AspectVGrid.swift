@@ -13,17 +13,19 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
 
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                let minWidthOfCard: CGFloat = 95
-                let width: CGFloat = widthThatFits(itemCount: items.count,
-                                                   in: geometry.size,
-                                                   itemAspectRatio: aspectRatio)
-                LazyVGrid(columns: [adaptiveGridItem(width: max(width, minWidthOfCard))], spacing: 0) {
-                    ForEach(items) { item in
-                        content(item).aspectRatio(aspectRatio, contentMode: .fit)
+            ScrollView (showsIndicators: false) {
+                VStack {
+                    let minWidthOfCard: CGFloat = 95
+                    let width: CGFloat = widthThatFits(itemCount: items.count,
+                                                       in: geometry.size,
+                                                       itemAspectRatio: aspectRatio)
+                    LazyVGrid(columns: [adaptiveGridItem(width: max(width, minWidthOfCard))], spacing: 0) {
+                        ForEach(items) { item in
+                            content(item).aspectRatio(aspectRatio, contentMode: .fit)
+                        }
                     }
+                    Spacer(minLength: 0)
                 }
-                Spacer(minLength: 0)
             }
         }
     }
