@@ -93,15 +93,11 @@ struct GameModel {
         let numOfShapes = setOfCards.map(\.content.numOfShapes.rawValue)
         let shadings = setOfCards.map(\.content.shading.rawValue)
         
-        if compare(shapes), compare(colors), compare(numOfShapes), compare(shadings) {
-            return true
-        } else {
-            return false
-        }
+        return isValidMatch(shapes) && isValidMatch(colors) && isValidMatch(numOfShapes) && isValidMatch(shadings)
     }
     
-    private func compare(_ content: [Int]) -> Bool {
-        if Set(content).count == 3 || Set(content).count == 1 {
+    private func isValidMatch(_ contentRawValues: [Int]) -> Bool {
+        if Set(contentRawValues).count == 3 || Set(contentRawValues).count == 1 {
             return true
         }
         return false
