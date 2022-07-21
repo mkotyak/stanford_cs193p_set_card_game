@@ -3,8 +3,6 @@ import Foundation
 struct GameModel {
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
-    var playerCards: [CardModel] = []
-    var playedCards: [CardModel] = []
     var deckBuilder: DeckBuilder
     var score = 0
     
@@ -44,15 +42,12 @@ struct GameModel {
         
         self.deck = deck
         self.cardsOnTheScreen = cardsOnTheScreen
-        playerCards = []
-        playedCards = []
     }
     
     private mutating func resetGame() {
         deck = []
         cardsOnTheScreen = []
-        playerCards = []
-        playedCards = []
+        score = 0
     }
 
     mutating func toggleCard(by cardId: UUID) -> MatchSuccessStatus {
@@ -125,19 +120,14 @@ struct GameModel {
             for _ in cardsOnTheScreen {
                 let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
                 if let index = index {
-                    playerCards.append(cardsOnTheScreen.remove(at: index))
+                    cardsOnTheScreen.remove(at: index)
                     replaceMatchedCards(at: index)
                 }
             }
         } else if matchStatus == .unsuccessfulMatch {
+            resetCardsState()
             if score != 0 {
                 score -= 1
-            }
-            resetCardsState()
-            if !playerCards.isEmpty, playerCards.count >= 3 {
-                for _ in 1 ..< 3 {
-                    playedCards.append(playerCards.remove(at: 0))
-                }
             }
         }
     }
