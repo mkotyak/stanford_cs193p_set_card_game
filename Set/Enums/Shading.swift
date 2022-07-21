@@ -1,6 +1,6 @@
 import Foundation
 
-enum Shading: CaseIterable {
+enum Shading: Int, CaseIterable {
     case solid
     case stripped
     case open

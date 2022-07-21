@@ -39,6 +39,12 @@ class GameViewModel: ObservableObject {
             print("Card is out of scope")
             return
         }
-        gameModel.toggleCard(by: chousenCard.id)
+        
+        let matchStatus = gameModel.toggleCard(by: chousenCard.id)
+        if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.gameModel.finishTurn(for: matchStatus)
+            }
+        }
     }
 }

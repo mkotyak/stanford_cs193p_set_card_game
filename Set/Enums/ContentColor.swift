@@ -1,6 +1,6 @@
 import Foundation
 
-enum ContentColor: CaseIterable {
+enum ContentColor: Int, CaseIterable {
     case red
     case green
     case purple

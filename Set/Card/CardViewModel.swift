@@ -9,7 +9,7 @@ class CardViewModel: ObservableObject {
     }
     
     var backroundColor: Color {
-        if card.isSelected {
+        if card.state == .isSelected {
             return Color.gray.opacity(0.2)
         } else {
             return Color.white
@@ -17,8 +17,10 @@ class CardViewModel: ObservableObject {
     }
     
     var strokeColor: Color {
-        if card.isMatched {
+        if card.state == .isMatchedSuccessfully {
             return Color.green
+        } else if card.state == .isMatchedUnsuccessfully {
+            return Color.red
         } else {
             return Color.black
         }
