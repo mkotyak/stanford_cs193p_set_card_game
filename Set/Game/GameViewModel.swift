@@ -24,6 +24,10 @@ class GameViewModel: ObservableObject {
         isMoreCardAvailable ? .gray : .black
     }
     
+    var score: Int {
+        gameModel.score
+    }
+    
     // MARK: - Inents
     
     func dealThreeMoreCards() {

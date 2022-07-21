@@ -34,6 +34,33 @@ struct GameView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }))
+            HStack {
+//                Button {
+//                    print("player 1 make a set")
+//                } label: {
+//                    Text("Player 1")
+//                        .frame(width: 95, height: 30)
+//                        .background(gameViewModel.moreCardsButtonColor)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(10)
+//                }
+//                Spacer()
+                Text("\(gameViewModel.score)")
+                    .bold()
+                    .font(.largeTitle)
+//                Spacer()
+//                Button {
+//                    print("player 2 make a set")
+//                } label: {
+//                    Text("Player 2")
+//                        .frame(width: 95, height: 30)
+//                        .background(gameViewModel.moreCardsButtonColor)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(10)
+//                }
+
+            }
+            .padding()
         }
         
     }

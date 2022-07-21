@@ -6,6 +6,7 @@ struct GameModel {
     var playerCards: [CardModel] = []
     var playedCards: [CardModel] = []
     var deckBuilder: DeckBuilder
+    var score = 0
     
     init(deckBuilder: DeckBuilder) {
         self.deckBuilder = deckBuilder
@@ -120,6 +121,7 @@ struct GameModel {
 
     mutating func finishTurn(for matchStatus: MatchSuccessStatus) {
         if matchStatus == .successfulMatch {
+            score += 1
             for _ in cardsOnTheScreen {
                 let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
                 if let index = index {
@@ -128,6 +130,9 @@ struct GameModel {
                 }
             }
         } else if matchStatus == .unsuccessfulMatch {
+            if score != 0 {
+                score -= 1
+            }
             resetCardsState()
             if !playerCards.isEmpty, playerCards.count >= 3 {
                 for _ in 1 ..< 3 {
