@@ -29,11 +29,11 @@ struct GameModel {
         }
         var deck = deckBuilder.createDeck()
         
-        // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
-        for _ in 1 ... 54 {
-            deck.removeLast()
-        }
-        // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
+//        // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
+//        for _ in 1 ... 54 {
+//            deck.removeLast()
+//        }
+//        // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
         
         var cardsOnTheScreen: [CardModel] = []
         for _ in 1 ... 12 {
