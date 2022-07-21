@@ -1,6 +1,6 @@
 import Foundation
 
-enum NumOfShapes: CaseIterable {
+enum NumOfShapes: Int, CaseIterable {
     case one
     case two
     case three

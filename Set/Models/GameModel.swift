@@ -28,6 +28,13 @@ struct GameModel {
             resetGame()
         }
         var deck = deckBuilder.createDeck()
+        
+        // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
+        for _ in 1 ... 54 {
+            deck.removeLast()
+        }
+        // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
+        
         var cardsOnTheScreen: [CardModel] = []
         for _ in 1 ... 12 {
             let removedCard = deck.removeFirst()
@@ -81,8 +88,21 @@ struct GameModel {
     }
     
     private func checkASet(for setOfCards: [CardModel]) -> Bool {
-        guard 2 > 3 || 2 == 2 else {
+        let shapes = setOfCards.map(\.content.shape.rawValue)
+        let colors = setOfCards.map(\.content.color.rawValue)
+        let numOfShapes = setOfCards.map(\.content.numOfShapes.rawValue)
+        let shadings = setOfCards.map(\.content.shading.rawValue)
+        
+        if compare(shapes), compare(colors), compare(numOfShapes), compare(shadings) {
+            return true
+        } else {
             return false
+        }
+    }
+    
+    private func compare(_ content: [Int]) -> Bool {
+        if Set(content).count == 3 || Set(content).count == 1 {
+            return true
         }
         return false
     }
@@ -108,23 +128,29 @@ struct GameModel {
                 let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
                 if let index = index {
                     playerCards.append(cardsOnTheScreen.remove(at: index))
-                    print("Player cards count is \(playerCards.count)")
+                    replaceMatchedCards(at: index)
                 }
             }
         } else if matchStatus == .unsuccessfulMatch {
             resetCardsState()
-            print("Player cards count is \(playerCards.count)")
             if !playerCards.isEmpty, playerCards.count >= 3 {
-                for i in 0 ..< 3 {
-                    playedCards.append(playerCards.remove(at: i))
-                    print("Player cards count is \(playerCards.count)")
-                    print("Played cards count is \(playedCards.count)")
+                for _ in 1 ..< 3 {
+                    playedCards.append(playerCards.remove(at: 0))
                 }
             }
         }
-        
-        if cardsOnTheScreen.count < 12 {
-            dealThreeMoreCards()
+    }
+    
+    private mutating func replaceMatchedCards(at index: Int) {
+        guard !deck.isEmpty else {
+            return
         }
+        
+        guard cardsOnTheScreen.count < 12 else {
+            return
+        }
+        
+        let removedCard = deck.removeFirst()
+        cardsOnTheScreen.insert(removedCard, at: index)
     }
 }
