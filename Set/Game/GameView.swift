@@ -3,10 +3,6 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var gameViewModel: GameViewModel
     let cardViewBuilder: CardViewBuilder
-    
-    @State var countDownTimer = 10
-    @State var isRunning = false
-    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         VStack {
@@ -19,15 +15,10 @@ struct GameView: View {
                         gameViewModel.select(card, player)
                     }
             }
-            .navigationTitle(Text("Timer: \(countDownTimer)"))
-            .onReceive(timer) { _ in
-                if countDownTimer >= 1 && isRunning {
-                    countDownTimer -= 1
-                } else if countDownTimer == 0 {
-                    isRunning = false
-                    countDownTimer = 10
-                }
+            .onReceive(gameViewModel.timer) { _ in
+                gameViewModel.startTimer()
             }
+            .navigationTitle("\(gameViewModel.timerTitle)")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(
@@ -52,30 +43,33 @@ struct GameView: View {
                 }))
             HStack {
                 Button {
-                    isRunning = true
+                    gameViewModel.timerIsRunning = true
                     gameViewModel.whoseTurn = gameViewModel.player1
+                    gameViewModel.markAsPlaying(gameViewModel.player1)
                 } label: {
                     Text("Player 1")
                         .frame(width: 95, height: 30)
-                        .background(gameViewModel.moreCardsButtonColor)
+                        .background(gameViewModel.player1ButtonColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+                .disabled(gameViewModel.player2.isPlaying)
                 Spacer()
                 Text("\(gameViewModel.player1.score) - \(gameViewModel.player2.score)")
-                    .bold()
                     .font(.largeTitle)
                 Spacer()
                 Button {
-                    isRunning = true
+                    gameViewModel.timerIsRunning = true
                     gameViewModel.whoseTurn = gameViewModel.player2
+                    gameViewModel.markAsPlaying(gameViewModel.player2)
                 } label: {
                     Text("Player 2")
                         .frame(width: 95, height: 30)
-                        .background(gameViewModel.moreCardsButtonColor)
+                        .background(gameViewModel.player2ButtonColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+                .disabled(gameViewModel.player1.isPlaying)
             }
             .padding()
         }
