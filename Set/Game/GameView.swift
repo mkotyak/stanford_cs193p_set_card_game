@@ -3,6 +3,10 @@ import SwiftUI
 struct GameView: View {
     @ObservedObject var gameViewModel: GameViewModel
     let cardViewBuilder: CardViewBuilder
+    
+    @State var countDownTimer = 10
+    @State var isRunning = false
+    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         VStack {
@@ -14,6 +18,15 @@ struct GameView: View {
                         }
                         gameViewModel.select(card, player)
                     }
+            }
+            .navigationTitle(Text("Timer: \(countDownTimer)"))
+            .onReceive(timer) { _ in
+                if countDownTimer >= 1 && isRunning {
+                    countDownTimer -= 1
+                } else if countDownTimer == 0 {
+                    isRunning = false
+                    countDownTimer = 10
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
@@ -39,6 +52,7 @@ struct GameView: View {
                 }))
             HStack {
                 Button {
+                    isRunning = true
                     gameViewModel.whoseTurn = gameViewModel.player1
                 } label: {
                     Text("Player 1")
@@ -53,6 +67,7 @@ struct GameView: View {
                     .font(.largeTitle)
                 Spacer()
                 Button {
+                    isRunning = true
                     gameViewModel.whoseTurn = gameViewModel.player2
                 } label: {
                     Text("Player 2")
