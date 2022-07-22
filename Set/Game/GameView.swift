@@ -9,7 +9,10 @@ struct GameView: View {
             AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
                 cardViewBuilder.build(for: card)
                     .onTapGesture {
-                        gameViewModel.select(card)
+                        guard let player = gameViewModel.whoseTurn else {
+                            return
+                        }
+                        gameViewModel.select(card, player)
                     }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -35,34 +38,32 @@ struct GameView: View {
                         .cornerRadius(10)
                 }))
             HStack {
-//                Button {
-//                    print("player 1 make a set")
-//                } label: {
-//                    Text("Player 1")
-//                        .frame(width: 95, height: 30)
-//                        .background(gameViewModel.moreCardsButtonColor)
-//                        .foregroundColor(.white)
-//                        .cornerRadius(10)
-//                }
-//                Spacer()
-                Text("\(gameViewModel.score)")
+                Button {
+                    gameViewModel.whoseTurn = gameViewModel.player1
+                } label: {
+                    Text("Player 1")
+                        .frame(width: 95, height: 30)
+                        .background(gameViewModel.moreCardsButtonColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                Spacer()
+                Text("\(gameViewModel.player1.score) - \(gameViewModel.player2.score)")
                     .bold()
                     .font(.largeTitle)
-//                Spacer()
-//                Button {
-//                    print("player 2 make a set")
-//                } label: {
-//                    Text("Player 2")
-//                        .frame(width: 95, height: 30)
-//                        .background(gameViewModel.moreCardsButtonColor)
-//                        .foregroundColor(.white)
-//                        .cornerRadius(10)
-//                }
-
+                Spacer()
+                Button {
+                    gameViewModel.whoseTurn = gameViewModel.player2
+                } label: {
+                    Text("Player 2")
+                        .frame(width: 95, height: 30)
+                        .background(gameViewModel.moreCardsButtonColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
             }
             .padding()
         }
-        
     }
 }
 

@@ -4,10 +4,13 @@ struct GameModel {
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
     var deckBuilder: DeckBuilder
-    var score = 0
+    var player1: Player
+    var player2: Player
     
     init(deckBuilder: DeckBuilder) {
         self.deckBuilder = deckBuilder
+        player1 = Player(name: "Player 1", score: 0)
+        player2 = Player(name: "Player 2", score: 0)
         startNewGame()
     }
     
@@ -15,12 +18,23 @@ struct GameModel {
         guard !deck.isEmpty else {
             return
         }
+        
+//        if isMoreSetAvailable() {
+//            // penalize both players if there are more sets
+//            if score != 0 {
+//                score -= 1
+//            }
+//        }
 
         for _ in 0 ..< min(3, deck.count) {
             let removedCard = deck.removeFirst()
             cardsOnTheScreen.append(removedCard)
         }
     }
+    
+//    private func isMoreSetAvailable() -> Bool {
+//        return true
+//    }
     
     mutating func startNewGame() {
         if !cardsOnTheScreen.isEmpty {
@@ -36,6 +50,9 @@ struct GameModel {
         
         var cardsOnTheScreen: [CardModel] = []
         for _ in 1 ... 12 {
+            // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
+//            for _ in 1 ... 6 {
+            // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
             let removedCard = deck.removeFirst()
             cardsOnTheScreen.append(removedCard)
         }
@@ -47,7 +64,8 @@ struct GameModel {
     private mutating func resetGame() {
         deck = []
         cardsOnTheScreen = []
-        score = 0
+        player1.score = 0
+        player2.score = 0
     }
 
     mutating func toggleCard(by cardId: UUID) -> MatchSuccessStatus {
@@ -114,9 +132,14 @@ struct GameModel {
         }
     }
 
-    mutating func finishTurn(for matchStatus: MatchSuccessStatus) {
+    mutating func finishTurn(for matchStatus: MatchSuccessStatus, player: Player) {
+        print("Finish turn method: \(player.name)")
         if matchStatus == .successfulMatch {
-            score += 1
+            if player.name == player1.name {
+                player1.score += 1
+            } else {
+                player2.score += 1
+            }
             for _ in cardsOnTheScreen {
                 let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
                 if let index = index {
@@ -126,8 +149,10 @@ struct GameModel {
             }
         } else if matchStatus == .unsuccessfulMatch {
             resetCardsState()
-            if score != 0 {
-                score -= 1
+            if player.name == player1.name, player1.score != 0 {
+                player1.score -= 1
+            } else if player2.score != 0 {
+                player2.score -= 1
             }
         }
     }
