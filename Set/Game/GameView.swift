@@ -15,9 +15,6 @@ struct GameView: View {
                         gameViewModel.select(card, player)
                     }
             }
-            .onReceive(gameViewModel.timer) { _ in
-                gameViewModel.performCountingDownAction()
-            }
             .navigationTitle("\(gameViewModel.timerTitle)")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
@@ -44,6 +41,7 @@ struct GameView: View {
             HStack {
                 Button {
                     gameViewModel.didSelect(player: gameViewModel.player1)
+                    gameViewModel.startTimer()
                 } label: {
                     Text("Player 1")
                         .frame(width: 95, height: 30)
@@ -57,7 +55,8 @@ struct GameView: View {
                     .font(.largeTitle)
                 Spacer()
                 Button {
-                    gameViewModel.didSelect(player: gameViewModel.player1)
+                    gameViewModel.didSelect(player: gameViewModel.player2)
+                    gameViewModel.startTimer()
                 } label: {
                     Text("Player 2")
                         .frame(width: 95, height: 30)

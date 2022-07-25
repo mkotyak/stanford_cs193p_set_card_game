@@ -3,17 +3,18 @@ import SwiftUI
 
 class GameViewModel: ObservableObject {
     @Published private var gameModel: GameModel
-    @Published var countDownTimer = 10
-    var isTimerRunning = false
-    var timerTitle = ""
-    var timer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()
+    @Published var countDownTimer: Int = 10
+    @Published var timerTitle = ""
+    var timer: Timer?
     
-    func performCountingDownAction() {
-        timerTitle = "Time: \(countDownTimer)"
-        if isTimerRunning, countDownTimer >= 1 {
-            countDownTimer -= 1
-        } else {
-            cleanUp()
+    func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            self.timerTitle = "Time: \(self.countDownTimer)"
+            if self.countDownTimer >= 1 {
+                self.countDownTimer -= 1
+            } else {
+                self.cleanUp()
+            }
         }
     }
     
@@ -79,7 +80,11 @@ class GameViewModel: ObservableObject {
     }
         
     func select(_ card: CardModel, _ player: Player) {
-        guard isTimerRunning else {
+        guard let timer = timer else {
+            return
+        }
+        
+        guard timer.isValid else {
             return
         }
         
@@ -103,13 +108,12 @@ class GameViewModel: ObservableObject {
     
     private func cleanUp() {
         whoseTurn = nil
+        timer?.invalidate()
         timerTitle = ""
         countDownTimer = 10
-        isTimerRunning = false
     }
     
     func didSelect(player: Player) {
-        isTimerRunning = true
         whoseTurn = player
     }
 }
