@@ -3,11 +3,11 @@ import SwiftUI
 
 class GameViewModel: ObservableObject {
     @Published private var gameModel: GameModel
-    @Published var countdown: Int = 10
+    private var countdown: Int = 10
     @Published var timerTitle = ""
-    var timer: Timer?
+    private var timer: Timer?
     
-    func startTimer() {
+    private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             self.timerTitle = "Time: \(self.countdown)"
             if self.countdown >= 1 {
@@ -38,7 +38,7 @@ class GameViewModel: ObservableObject {
         isMoreCardAvailable ? .gray : .black
     }
     
-    var player1ButtonColor: Color {
+    var firstPlayerButtonColor: Color {
         if firstPlayer.id == whoseTurn?.id {
             return .green
         } else if secondPlayer.id == whoseTurn?.id {
@@ -48,7 +48,7 @@ class GameViewModel: ObservableObject {
         }
     }
     
-    var player2ButtonColor: Color {
+    var secondPlayerButtonColor: Color {
         if secondPlayer.id == whoseTurn?.id {
             return .green
         } else if firstPlayer.id == whoseTurn?.id {
@@ -66,11 +66,11 @@ class GameViewModel: ObservableObject {
         gameModel.secondPlayer
     }
     
-    var isPlayer1Active: Bool {
+    var isFirstPlayerActive: Bool {
         firstPlayer.id == whoseTurn?.id
     }
     
-    var isPlayer2Active: Bool {
+    var isSecondPlayerActive: Bool {
         secondPlayer.id == whoseTurn?.id
     }
     

@@ -7,7 +7,11 @@ struct GameModel {
     var firstPlayer: Player
     var secondPlayer: Player
     
-    init(deckBuilder: DeckBuilder, firstPlayer: Player, secondPlayer: Player) {
+    init(
+        deckBuilder: DeckBuilder,
+        firstPlayer: Player,
+        secondPlayer: Player
+    ) {
         self.deckBuilder = deckBuilder
         self.firstPlayer = firstPlayer
         self.secondPlayer = secondPlayer

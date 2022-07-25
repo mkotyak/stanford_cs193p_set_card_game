@@ -41,11 +41,11 @@ struct GameView: View {
                 } label: {
                     Text("\(gameViewModel.firstPlayer.name)")
                         .frame(width: 95, height: 30)
-                        .background(gameViewModel.player1ButtonColor)
+                        .background(gameViewModel.firstPlayerButtonColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .disabled(gameViewModel.isPlayer2Active)
+                .disabled(gameViewModel.isSecondPlayerActive)
                 Spacer()
                 Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
                     .font(.largeTitle)
@@ -55,11 +55,11 @@ struct GameView: View {
                 } label: {
                     Text("\(gameViewModel.secondPlayer.name)")
                         .frame(width: 95, height: 30)
-                        .background(gameViewModel.player2ButtonColor)
+                        .background(gameViewModel.secondPlayerButtonColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .disabled(gameViewModel.isPlayer1Active)
+                .disabled(gameViewModel.isFirstPlayerActive)
             }
             .padding()
         }
