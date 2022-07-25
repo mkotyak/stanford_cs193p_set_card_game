@@ -16,7 +16,7 @@ struct GameView: View {
                     }
             }
             .onReceive(gameViewModel.timer) { _ in
-                gameViewModel.startTimer()
+                gameViewModel.performCountingDownAction()
             }
             .navigationTitle("\(gameViewModel.timerTitle)")
             .navigationBarTitleDisplayMode(.inline)
@@ -43,9 +43,7 @@ struct GameView: View {
                 }))
             HStack {
                 Button {
-                    gameViewModel.timerIsRunning = true
-                    gameViewModel.whoseTurn = gameViewModel.player1
-                    gameViewModel.markAsPlaying(gameViewModel.player1)
+                    gameViewModel.didSelect(player: gameViewModel.player1)
                 } label: {
                     Text("Player 1")
                         .frame(width: 95, height: 30)
@@ -53,15 +51,13 @@ struct GameView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .disabled(gameViewModel.player2.isPlaying)
+                .disabled(gameViewModel.player2.id == gameViewModel.whoseTurn?.id)
                 Spacer()
                 Text("\(gameViewModel.player1.score) - \(gameViewModel.player2.score)")
                     .font(.largeTitle)
                 Spacer()
                 Button {
-                    gameViewModel.timerIsRunning = true
-                    gameViewModel.whoseTurn = gameViewModel.player2
-                    gameViewModel.markAsPlaying(gameViewModel.player2)
+                    gameViewModel.didSelect(player: gameViewModel.player1)
                 } label: {
                     Text("Player 2")
                         .frame(width: 95, height: 30)
@@ -69,7 +65,7 @@ struct GameView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .disabled(gameViewModel.player1.isPlaying)
+                .disabled(gameViewModel.player1.id == gameViewModel.whoseTurn?.id)
             }
             .padding()
         }

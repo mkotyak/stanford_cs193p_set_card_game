@@ -4,13 +4,13 @@ import SwiftUI
 class GameViewModel: ObservableObject {
     @Published private var gameModel: GameModel
     @Published var countDownTimer = 10
-    var timerIsRunning = false
+    var isTimerRunning = false
     var timerTitle = ""
     var timer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()
     
-    func startTimer() {
+    func performCountingDownAction() {
         timerTitle = "Time: \(countDownTimer)"
-        if timerIsRunning, countDownTimer >= 1 {
+        if isTimerRunning, countDownTimer >= 1 {
             countDownTimer -= 1
         } else {
             cleanUp()
@@ -38,9 +38,9 @@ class GameViewModel: ObservableObject {
     }
     
     var player1ButtonColor: Color {
-        if player1.isPlaying {
+        if player1.id == whoseTurn?.id {
             return .green
-        } else if player2.isPlaying {
+        } else if player2.id == whoseTurn?.id {
             return .gray
         } else {
             return .black
@@ -48,9 +48,9 @@ class GameViewModel: ObservableObject {
     }
     
     var player2ButtonColor: Color {
-        if player2.isPlaying {
+        if player2.id == whoseTurn?.id {
             return .green
-        } else if player1.isPlaying {
+        } else if player1.id == whoseTurn?.id {
             return .gray
         } else {
             return .black
@@ -77,23 +77,18 @@ class GameViewModel: ObservableObject {
         cleanUp()
         gameModel.startNewGame()
     }
-    
-    func markAsPlaying(_ player: Player) {
-        if player.name == player1.name {
-            gameModel.player1.isPlaying = true
-        } else {
-            gameModel.player2.isPlaying = true
-        }
-    }
         
     func select(_ card: CardModel, _ player: Player) {
-        print("Select method: \(player.name)")
-        guard let chousenCard = cardsOnScreen.first(where: { $0.id == card.id }) else {
-            print("Card is out of scope")
+        guard isTimerRunning else {
             return
         }
         
-        guard timerIsRunning else {
+        // test comment
+        print("Select method: \(player.name)")
+        // END: test comment
+        
+        guard let chousenCard = cardsOnScreen.first(where: { $0.id == card.id }) else {
+            print("Card is out of scope")
             return
         }
         
@@ -110,8 +105,11 @@ class GameViewModel: ObservableObject {
         whoseTurn = nil
         timerTitle = ""
         countDownTimer = 10
-        timerIsRunning = false
-        gameModel.player1.isPlaying = false
-        gameModel.player2.isPlaying = false
+        isTimerRunning = false
+    }
+    
+    func didSelect(player: Player) {
+        isTimerRunning = true
+        whoseTurn = player
     }
 }

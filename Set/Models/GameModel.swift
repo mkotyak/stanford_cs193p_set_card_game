@@ -136,9 +136,9 @@ struct GameModel {
         print("Finish turn method: \(player.name)")
         if matchStatus == .successfulMatch {
             if player.name == player1.name {
-                player1.score += 1
+                player1.increaseScore(by: 1)
             } else {
-                player2.score += 1
+                player2.increaseScore(by: 1)
             }
             for _ in cardsOnTheScreen {
                 let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
@@ -150,9 +150,9 @@ struct GameModel {
         } else if matchStatus == .unsuccessfulMatch {
             resetCardsState()
             if player.name == player1.name, player1.score != 0 {
-                player1.score -= 1
+                player1.decreaseScore(by: 1)
             } else if player2.score != 0 {
-                player2.score -= 1
+                player2.decreaseScore(by: 1)
             }
         }
     }
