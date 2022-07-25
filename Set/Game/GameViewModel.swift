@@ -59,11 +59,11 @@ class GameViewModel: ObservableObject {
     }
     
     var player1: Player {
-        gameModel.player1
+        gameModel.firstPlayer
     }
     
     var player2: Player {
-        gameModel.player2
+        gameModel.secondPlayer
     }
     
     var whoseTurn: Player?

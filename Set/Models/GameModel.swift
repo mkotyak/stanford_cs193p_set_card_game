@@ -4,13 +4,13 @@ struct GameModel {
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
     var deckBuilder: DeckBuilder
-    var player1: Player
-    var player2: Player
+    var firstPlayer: Player
+    var secondPlayer: Player
     
-    init(deckBuilder: DeckBuilder, player1Name: String, player2Name: String) {
+    init(deckBuilder: DeckBuilder, firstPlayer: Player, secondPlayer: Player) {
         self.deckBuilder = deckBuilder
-        player1 = Player(name: player1Name)
-        player2 = Player(name: player2Name)
+        self.firstPlayer = firstPlayer
+        self.secondPlayer = secondPlayer
         startNewGame()
     }
     
@@ -64,8 +64,8 @@ struct GameModel {
     private mutating func resetGame() {
         deck = []
         cardsOnTheScreen = []
-        player1.score = 0
-        player2.score = 0
+        firstPlayer.score = 0
+        secondPlayer.score = 0
     }
 
     mutating func toggleCard(by cardId: UUID) -> MatchSuccessStatus {
@@ -135,10 +135,10 @@ struct GameModel {
     mutating func finishTurn(for matchStatus: MatchSuccessStatus, player: Player) {
         print("Finish turn method: \(player.name)")
         if matchStatus == .successfulMatch {
-            if player.name == player1.name {
-                player1.increaseScore(by: 1)
+            if player.name == firstPlayer.name {
+                firstPlayer.increaseScore(by: 1)
             } else {
-                player2.increaseScore(by: 1)
+                secondPlayer.increaseScore(by: 1)
             }
             for _ in cardsOnTheScreen {
                 let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
@@ -149,10 +149,10 @@ struct GameModel {
             }
         } else if matchStatus == .unsuccessfulMatch {
             resetCardsState()
-            if player.name == player1.name, player1.score != 0 {
-                player1.decreaseScore(by: 1)
-            } else if player2.score != 0 {
-                player2.decreaseScore(by: 1)
+            if player.name == firstPlayer.name, firstPlayer.score != 0 {
+                firstPlayer.decreaseScore(by: 1)
+            } else if secondPlayer.score != 0 {
+                secondPlayer.decreaseScore(by: 1)
             }
         }
     }
