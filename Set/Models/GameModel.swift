@@ -7,10 +7,10 @@ struct GameModel {
     var player1: Player
     var player2: Player
     
-    init(deckBuilder: DeckBuilder) {
+    init(deckBuilder: DeckBuilder, player1Name: String, player2Name: String) {
         self.deckBuilder = deckBuilder
-        player1 = Player(name: "Player 1", score: 0)
-        player2 = Player(name: "Player 2", score: 0)
+        player1 = Player(name: player1Name)
+        player2 = Player(name: player2Name)
         startNewGame()
     }
     
