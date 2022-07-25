@@ -9,9 +9,10 @@ struct GameView: View {
             AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
                 cardViewBuilder.build(for: card)
                     .onTapGesture {
-                        gameViewModel.select(card)
+                        gameViewModel.didSelect(card: card)
                     }
             }
+            .navigationTitle("\(gameViewModel.timerTitle)")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(
@@ -34,8 +35,34 @@ struct GameView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }))
+            HStack {
+                Button {
+                    gameViewModel.didSelect(player: gameViewModel.firstPlayer)
+                } label: {
+                    Text("\(gameViewModel.firstPlayer.name)")
+                        .frame(width: 95, height: 30)
+                        .background(gameViewModel.firstPlayerButtonColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .disabled(gameViewModel.isSecondPlayerActive)
+                Spacer()
+                Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
+                    .font(.largeTitle)
+                Spacer()
+                Button {
+                    gameViewModel.didSelect(player: gameViewModel.secondPlayer)
+                } label: {
+                    Text("\(gameViewModel.secondPlayer.name)")
+                        .frame(width: 95, height: 30)
+                        .background(gameViewModel.secondPlayerButtonColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                .disabled(gameViewModel.isFirstPlayerActive)
+            }
+            .padding()
         }
-        
     }
 }
 
