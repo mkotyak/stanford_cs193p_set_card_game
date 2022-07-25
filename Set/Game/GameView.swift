@@ -9,10 +9,7 @@ struct GameView: View {
             AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
                 cardViewBuilder.build(for: card)
                     .onTapGesture {
-                        guard let player = gameViewModel.whoseTurn else {
-                            return
-                        }
-                        gameViewModel.select(card, player)
+                        gameViewModel.didSelect(card: card)
                     }
             }
             .navigationTitle("\(gameViewModel.timerTitle)")
@@ -40,31 +37,29 @@ struct GameView: View {
                 }))
             HStack {
                 Button {
-                    gameViewModel.didSelect(player: gameViewModel.player1)
-                    gameViewModel.startTimer()
+                    gameViewModel.didSelect(player: gameViewModel.firstPlayer)
                 } label: {
-                    Text("Player 1")
+                    Text("\(gameViewModel.firstPlayer.name)")
                         .frame(width: 95, height: 30)
                         .background(gameViewModel.player1ButtonColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .disabled(gameViewModel.player2.id == gameViewModel.whoseTurn?.id)
+                .disabled(gameViewModel.isPlayer2Active)
                 Spacer()
-                Text("\(gameViewModel.player1.score) - \(gameViewModel.player2.score)")
+                Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
                     .font(.largeTitle)
                 Spacer()
                 Button {
-                    gameViewModel.didSelect(player: gameViewModel.player2)
-                    gameViewModel.startTimer()
+                    gameViewModel.didSelect(player: gameViewModel.secondPlayer)
                 } label: {
-                    Text("Player 2")
+                    Text("\(gameViewModel.secondPlayer.name)")
                         .frame(width: 95, height: 30)
                         .background(gameViewModel.player2ButtonColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .disabled(gameViewModel.player1.id == gameViewModel.whoseTurn?.id)
+                .disabled(gameViewModel.isPlayer1Active)
             }
             .padding()
         }

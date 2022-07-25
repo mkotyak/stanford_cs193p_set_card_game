@@ -135,7 +135,7 @@ struct GameModel {
     mutating func finishTurn(for matchStatus: MatchSuccessStatus, player: Player) {
         print("Finish turn method: \(player.name)")
         if matchStatus == .successfulMatch {
-            if player.name == firstPlayer.name {
+            if player.id == firstPlayer.id {
                 firstPlayer.increaseScore(by: 1)
             } else {
                 secondPlayer.increaseScore(by: 1)
@@ -149,7 +149,7 @@ struct GameModel {
             }
         } else if matchStatus == .unsuccessfulMatch {
             resetCardsState()
-            if player.name == firstPlayer.name, firstPlayer.score != 0 {
+            if player.id == firstPlayer.id, firstPlayer.score != 0 {
                 firstPlayer.decreaseScore(by: 1)
             } else if secondPlayer.score != 0 {
                 secondPlayer.decreaseScore(by: 1)

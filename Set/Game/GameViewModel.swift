@@ -3,15 +3,15 @@ import SwiftUI
 
 class GameViewModel: ObservableObject {
     @Published private var gameModel: GameModel
-    @Published var countDownTimer: Int = 10
+    @Published var countdown: Int = 10
     @Published var timerTitle = ""
     var timer: Timer?
     
     func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            self.timerTitle = "Time: \(self.countDownTimer)"
-            if self.countDownTimer >= 1 {
-                self.countDownTimer -= 1
+            self.timerTitle = "Time: \(self.countdown)"
+            if self.countdown >= 1 {
+                self.countdown -= 1
             } else {
                 self.cleanUp()
             }
@@ -39,9 +39,9 @@ class GameViewModel: ObservableObject {
     }
     
     var player1ButtonColor: Color {
-        if player1.id == whoseTurn?.id {
+        if firstPlayer.id == whoseTurn?.id {
             return .green
-        } else if player2.id == whoseTurn?.id {
+        } else if secondPlayer.id == whoseTurn?.id {
             return .gray
         } else {
             return .black
@@ -49,21 +49,29 @@ class GameViewModel: ObservableObject {
     }
     
     var player2ButtonColor: Color {
-        if player2.id == whoseTurn?.id {
+        if secondPlayer.id == whoseTurn?.id {
             return .green
-        } else if player1.id == whoseTurn?.id {
+        } else if firstPlayer.id == whoseTurn?.id {
             return .gray
         } else {
             return .black
         }
     }
     
-    var player1: Player {
+    var firstPlayer: Player {
         gameModel.firstPlayer
     }
     
-    var player2: Player {
+    var secondPlayer: Player {
         gameModel.secondPlayer
+    }
+    
+    var isPlayer1Active: Bool {
+        firstPlayer.id == whoseTurn?.id
+    }
+    
+    var isPlayer2Active: Bool {
+        secondPlayer.id == whoseTurn?.id
     }
     
     var whoseTurn: Player?
@@ -110,10 +118,19 @@ class GameViewModel: ObservableObject {
         whoseTurn = nil
         timer?.invalidate()
         timerTitle = ""
-        countDownTimer = 10
+        countdown = 10
     }
     
     func didSelect(player: Player) {
         whoseTurn = player
+        startTimer()
+    }
+    
+    func didSelect(card: CardModel) {
+        guard let player = whoseTurn else {
+            return
+        }
+        
+        select(card, player)
     }
 }
