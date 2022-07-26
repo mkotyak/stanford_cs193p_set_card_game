@@ -4,6 +4,7 @@ struct GameModel {
     private enum Constants {
         static let defaultBonus: Int = 1
         static let defaultPenalty: Int = 1
+        static let extraBonus: Int = 1
         static let cardsToDealCount: Int = 3
         static let defaultCardsOnScreenCount: Int = 12
         static let cardsInSetCount: Int = 3
@@ -100,32 +101,18 @@ struct GameModel {
         if checkASet(for: selectedCards) {
             let currentSuccesfullMatchDate: Date = .now
             let currentTurnDuration: TimeInterval = currentTurnDuration(for: currentSuccesfullMatchDate)
+            let bonus: Int = calculateBonus(for: currentTurnDuration)
             
             mark(selectedCards, as: .isMatchedSuccessfully)
-            
-            // I can move this logic to a method, but I don't know how to call it
-            if player.id == firstPlayer.id {
-                firstPlayer.increaseScore(by: calculateBonus(for: currentTurnDuration))
-            } else if player.id == secondPlayer.id {
-                secondPlayer.increaseScore(by: calculateBonus(for: currentTurnDuration))
-            }
-            // ------------------------------------------------------------------
-            
+            increaseScore(playerID: player.id, value: bonus)
             previousSuccesfullMatchDate = currentSuccesfullMatchDate
             previousTurnDuration = currentTurnDuration
             
             return .successfulMatch
         } else {
             mark(selectedCards, as: .isMatchedUnsuccessfully)
-            
-            // I can move this logic to a method, but I don't know how to call it
-            if player.id == firstPlayer.id, firstPlayer.score != 0 {
-                firstPlayer.decreaseScore(by: Constants.defaultPenalty)
-            } else if player.id == secondPlayer.id, secondPlayer.score != 0 {
-                secondPlayer.decreaseScore(by: Constants.defaultPenalty)
-            }
-            // ------------------------------------------------------------------
-            
+            decreaseScore(playerID: player.id, value: Constants.defaultPenalty)
+    
             return .unsuccessfulMatch
         }
     }
@@ -157,7 +144,7 @@ struct GameModel {
         
         if let previousTurnDuration = previousTurnDuration {
             if timeDuration < previousTurnDuration {
-                bonus = Constants.defaultBonus + 1
+                bonus = Constants.defaultBonus + Constants.extraBonus
             } else {
                 bonus = Constants.defaultBonus
             }
@@ -167,11 +154,30 @@ struct GameModel {
         return bonus
     }
     
+    private mutating func increaseScore(playerID: UUID, value: Int) {
+        if playerID == firstPlayer.id {
+            firstPlayer.increaseScore(by: value)
+        } else if playerID == secondPlayer.id {
+            secondPlayer.increaseScore(by: value)
+        }
+    }
+    
+    private mutating func decreaseScore(playerID: UUID, value: Int) {
+        if playerID == firstPlayer.id, firstPlayer.score != 0 {
+            firstPlayer.decreaseScore(by: value)
+        } else if playerID == secondPlayer.id, secondPlayer.score != 0 {
+            secondPlayer.decreaseScore(by: value)
+        }
+    }
+    
     private mutating func resetGame() {
         deck = []
         cardsOnTheScreen = []
         firstPlayer.score = 0
         secondPlayer.score = 0
+        previousTurnDuration = nil
+        previousSuccesfullMatchDate = nil
+        startGameDate = .now
     }
     
     private func checkASet(for setOfCards: [CardModel]) -> Bool {
