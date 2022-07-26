@@ -4,7 +4,7 @@ struct GameView: View {
     private enum Constants {
         static let buttonFrameWidth: CGFloat = 95
         static let buttonFrameHeight: CGFloat = 30
-        static let cornerRadius: CGFloat = 10
+        static let buttonCornerRadius: CGFloat = 10
     }
 
     @ObservedObject var gameViewModel: GameViewModel
@@ -64,7 +64,7 @@ struct GameView: View {
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(gameViewModel.moreCardsButtonColor)
             .foregroundColor(.white)
-            .cornerRadius(Constants.cornerRadius)
+            .cornerRadius(Constants.buttonCornerRadius)
     }
 
     var newGameButton: some View {
@@ -72,7 +72,7 @@ struct GameView: View {
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(.black)
             .foregroundColor(.white)
-            .cornerRadius(Constants.cornerRadius)
+            .cornerRadius(Constants.buttonCornerRadius)
     }
 
     var firstPlayerButton: some View {
@@ -80,7 +80,7 @@ struct GameView: View {
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(gameViewModel.firstPlayerButtonColor)
             .foregroundColor(.white)
-            .cornerRadius(Constants.cornerRadius)
+            .cornerRadius(Constants.buttonCornerRadius)
     }
 
     var secondPlayerButton: some View {
@@ -88,6 +88,6 @@ struct GameView: View {
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(gameViewModel.secondPlayerButtonColor)
             .foregroundColor(.white)
-            .cornerRadius(Constants.cornerRadius)
+            .cornerRadius(Constants.buttonCornerRadius)
     }
 }

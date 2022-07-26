@@ -3,7 +3,7 @@ import SwiftUI
 
 class CardViewModel: ObservableObject {
     private enum Constants {
-        static let opacity: Double = 0.2
+        static let selectedCardOpacity: Double = 0.2
     }
     
     @Published private var card: CardModel
@@ -14,7 +14,7 @@ class CardViewModel: ObservableObject {
     
     var backroundColor: Color {
         if card.state == .isSelected {
-            return Color.gray.opacity(Constants.opacity)
+            return Color.gray.opacity(Constants.selectedCardOpacity)
         } else {
             return Color.white
         }

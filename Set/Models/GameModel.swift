@@ -4,9 +4,9 @@ struct GameModel {
     private enum Constants {
         static let defaultBonus: Int = 1
         static let defaultPenalty: Int = 1
-        static let cardsCountToDeal: Int = 3
-        static let defaultCardsCountOnScreen: Int = 12
-        static let cardsCountInSet: Int = 3
+        static let cardsToDealCount: Int = 3
+        static let defaultCardsOnScreenCount: Int = 12
+        static let cardsInSetCount: Int = 3
     }
     
     var deck: [CardModel] = []
@@ -38,7 +38,7 @@ struct GameModel {
 //            }
 //        }
 
-        for _ in 0 ..< min(Constants.cardsCountToDeal, deck.count) {
+        for _ in 0 ..< min(Constants.cardsToDealCount, deck.count) {
             let removedCard = deck.removeFirst()
             cardsOnTheScreen.append(removedCard)
         }
@@ -57,7 +57,7 @@ struct GameModel {
 //        // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
         
         var cardsOnTheScreen: [CardModel] = []
-        for _ in 1 ... Constants.defaultCardsCountOnScreen {
+        for _ in 1 ... Constants.defaultCardsOnScreenCount {
             // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
 //            for _ in 1 ... 6 {
             // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
@@ -84,11 +84,11 @@ struct GameModel {
         
         let selectedCards = cardsOnTheScreen.filter { $0.state == .isSelected }
                 
-        guard selectedCards.count >= Constants.cardsCountInSet else {
+        guard selectedCards.count >= Constants.cardsInSetCount else {
             return .noMatch
         }
         
-        guard selectedCards.count == Constants.cardsCountInSet else {
+        guard selectedCards.count == Constants.cardsInSetCount else {
             resetCardsState()
             return .noMatch
         }
@@ -181,7 +181,7 @@ struct GameModel {
             return
         }
         
-        guard cardsOnTheScreen.count < Constants.defaultCardsCountOnScreen else {
+        guard cardsOnTheScreen.count < Constants.defaultCardsOnScreenCount else {
             return
         }
         

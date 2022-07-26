@@ -4,8 +4,8 @@ import SwiftUI
 class GameViewModel: ObservableObject {
     private enum Constants {
         static let playerTurnDuration: Int = 10
-        static let timeInterval: TimeInterval = 1.0
-        static let delay: Double = 0.5
+        static let timerFireInterval: TimeInterval = 1.0
+        static let matchAnimationDuration: Double = 0.5
     }
     
     @Published private var gameModel: GameModel
@@ -72,7 +72,7 @@ class GameViewModel: ObservableObject {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: Constants.timeInterval, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: Constants.timerFireInterval, repeats: true) { _ in
             self.timerTitle = "Time: \(self.countdown)"
             if self.countdown >= 1 {
                 self.countdown -= 1
@@ -116,7 +116,7 @@ class GameViewModel: ObservableObject {
         
         let matchStatus = gameModel.toggleCard(by: chousenCard.id)
         if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.delay) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.matchAnimationDuration) { [weak self] in
                 self?.gameModel.finishTurn(for: matchStatus, player: player)
                 self?.cleanUp()
             }
