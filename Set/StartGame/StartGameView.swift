@@ -2,7 +2,7 @@ import SwiftUI
 
 struct StartGameView: View {
     let gameViewBuilder: GameViewBuilder
-    
+
     var body: some View {
         NavigationView {
             NavigationLink(destination: gameViewBuilder.build()) {
@@ -17,16 +17,3 @@ struct StartGameView: View {
         }
     }
 }
-
-
-
-
-
-
-
-
-//struct StartGameView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StartGameView()
-//    }
-//}
