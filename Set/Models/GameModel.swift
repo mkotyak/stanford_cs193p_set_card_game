@@ -1,6 +1,14 @@
 import Foundation
 
 struct GameModel {
+    private enum Constants {
+        static let defaultBonus: Int = 1
+        static let defaultPenalty: Int = 1
+        static let cardsCountToDeal: Int = 3
+        static let defaultCardsCountOnScreen: Int = 12
+        static let cardsCountInSet: Int = 3
+    }
+    
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
     var deckBuilder: DeckBuilder
@@ -30,16 +38,12 @@ struct GameModel {
 //            }
 //        }
 
-        for _ in 0 ..< min(3, deck.count) {
+        for _ in 0 ..< min(Constants.cardsCountToDeal, deck.count) {
             let removedCard = deck.removeFirst()
             cardsOnTheScreen.append(removedCard)
         }
     }
-    
-//    private func isMoreSetAvailable() -> Bool {
-//        return true
-//    }
-    
+
     mutating func startNewGame() {
         if !cardsOnTheScreen.isEmpty {
             resetGame()
@@ -53,7 +57,7 @@ struct GameModel {
 //        // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
         
         var cardsOnTheScreen: [CardModel] = []
-        for _ in 1 ... 12 {
+        for _ in 1 ... Constants.defaultCardsCountOnScreen {
             // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
 //            for _ in 1 ... 6 {
             // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
@@ -63,13 +67,6 @@ struct GameModel {
         
         self.deck = deck
         self.cardsOnTheScreen = cardsOnTheScreen
-    }
-    
-    private mutating func resetGame() {
-        deck = []
-        cardsOnTheScreen = []
-        firstPlayer.score = 0
-        secondPlayer.score = 0
     }
 
     mutating func toggleCard(by cardId: UUID) -> MatchSuccessStatus {
@@ -87,11 +84,11 @@ struct GameModel {
         
         let selectedCards = cardsOnTheScreen.filter { $0.state == .isSelected }
                 
-        guard selectedCards.count >= 3 else {
+        guard selectedCards.count >= Constants.cardsCountInSet else {
             return .noMatch
         }
         
-        guard selectedCards.count == 3 else {
+        guard selectedCards.count == Constants.cardsCountInSet else {
             resetCardsState()
             return .noMatch
         }
@@ -103,6 +100,49 @@ struct GameModel {
             mark(selectedCards, as: .isMatchedUnsuccessfully)
             return .unsuccessfulMatch
         }
+    }
+    
+    mutating func finishTurn(for matchStatus: MatchSuccessStatus, player: Player) {
+        if matchStatus == .successfulMatch {
+            getBonus(for: player)
+            sortOutMatchedCards()
+        } else if matchStatus == .unsuccessfulMatch {
+            resetCardsState()
+            getPenalty(for: player)
+        }
+    }
+    
+    mutating private func sortOutMatchedCards() {
+        for _ in cardsOnTheScreen {
+            let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
+            if let index = index {
+                cardsOnTheScreen.remove(at: index)
+                replaceMatchedCards(at: index)
+            }
+        }
+    }
+    
+    mutating private func getBonus(for player: Player) {
+        if player.id == firstPlayer.id {
+            firstPlayer.increaseScore(by: Constants.defaultBonus)
+        } else if player.id == secondPlayer.id{
+            secondPlayer.increaseScore(by: Constants.defaultBonus)
+        }
+    }
+    
+    mutating private func getPenalty(for player: Player) {
+        if player.id == firstPlayer.id, firstPlayer.score != 0 {
+            firstPlayer.decreaseScore(by: Constants.defaultPenalty)
+        } else if player.id == secondPlayer.id, secondPlayer.score != 0 {
+            secondPlayer.decreaseScore(by: Constants.defaultPenalty)
+        }
+    }
+    
+    private mutating func resetGame() {
+        deck = []
+        cardsOnTheScreen = []
+        firstPlayer.score = 0
+        secondPlayer.score = 0
     }
     
     private func checkASet(for setOfCards: [CardModel]) -> Bool {
@@ -135,42 +175,21 @@ struct GameModel {
             }
         }
     }
-
-    mutating func finishTurn(for matchStatus: MatchSuccessStatus, player: Player) {
-        print("Finish turn method: \(player.name)")
-        if matchStatus == .successfulMatch {
-            if player.id == firstPlayer.id {
-                firstPlayer.increaseScore(by: 1)
-            } else {
-                secondPlayer.increaseScore(by: 1)
-            }
-            for _ in cardsOnTheScreen {
-                let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
-                if let index = index {
-                    cardsOnTheScreen.remove(at: index)
-                    replaceMatchedCards(at: index)
-                }
-            }
-        } else if matchStatus == .unsuccessfulMatch {
-            resetCardsState()
-            if player.id == firstPlayer.id, firstPlayer.score != 0 {
-                firstPlayer.decreaseScore(by: 1)
-            } else if secondPlayer.score != 0 {
-                secondPlayer.decreaseScore(by: 1)
-            }
-        }
-    }
     
     private mutating func replaceMatchedCards(at index: Int) {
         guard !deck.isEmpty else {
             return
         }
         
-        guard cardsOnTheScreen.count < 12 else {
+        guard cardsOnTheScreen.count < Constants.defaultCardsCountOnScreen else {
             return
         }
         
         let removedCard = deck.removeFirst()
         cardsOnTheScreen.insert(removedCard, at: index)
     }
+    
+    //    private func isMoreSetAvailable() -> Bool {
+    //        return true
+    //    }
 }

@@ -1,6 +1,12 @@
 import SwiftUI
 
 struct GameView: View {
+    private enum Constants {
+        static let buttonFrameWidth: CGFloat = 95
+        static let buttonFrameHeight: CGFloat = 30
+        static let cornerRadius: CGFloat = 10
+    }
+
     @ObservedObject var gameViewModel: GameViewModel
     let cardViewBuilder: CardViewBuilder
 
@@ -16,58 +22,72 @@ struct GameView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(
-                leading: Button(action: {
+                leading: Button {
                     gameViewModel.dealThreeMoreCards()
-                }, label: {
-                    Text("+3 cards")
-                        .frame(width: 95, height: 30)
-                        .background(gameViewModel.moreCardsButtonColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                })
+                } label: {
+                    threeMoreCardsButton
+                }
                 .disabled(gameViewModel.isMoreCardAvailable),
-                trailing: Button(action: {
+
+                trailing: Button {
                     gameViewModel.startNewGame()
-                }, label: {
-                    Text("New game")
-                        .frame(width: 95, height: 30)
-                        .background(.black)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }))
+                } label: {
+                    newGameButton
+                })
+
             HStack {
                 Button {
                     gameViewModel.didSelect(player: gameViewModel.firstPlayer)
                 } label: {
-                    Text("\(gameViewModel.firstPlayer.name)")
-                        .frame(width: 95, height: 30)
-                        .background(gameViewModel.firstPlayerButtonColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    firstPlayerButton
                 }
                 .disabled(gameViewModel.isSecondPlayerActive)
+
                 Spacer()
                 Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
                     .font(.largeTitle)
                 Spacer()
+
                 Button {
                     gameViewModel.didSelect(player: gameViewModel.secondPlayer)
                 } label: {
-                    Text("\(gameViewModel.secondPlayer.name)")
-                        .frame(width: 95, height: 30)
-                        .background(gameViewModel.secondPlayerButtonColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    secondPlayerButton
                 }
                 .disabled(gameViewModel.isFirstPlayerActive)
             }
             .padding()
         }
     }
-}
 
-// struct GameView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SetGameView(gameViewModel: SetGameViewModel(deckBuilder: DeckBuilder()))
-//    }
-// }
+    var threeMoreCardsButton: some View {
+        Text("+3 cards")
+            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
+            .background(gameViewModel.moreCardsButtonColor)
+            .foregroundColor(.white)
+            .cornerRadius(Constants.cornerRadius)
+    }
+
+    var newGameButton: some View {
+        Text("New game")
+            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
+            .background(.black)
+            .foregroundColor(.white)
+            .cornerRadius(Constants.cornerRadius)
+    }
+
+    var firstPlayerButton: some View {
+        Text("\(gameViewModel.firstPlayer.name)")
+            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
+            .background(gameViewModel.firstPlayerButtonColor)
+            .foregroundColor(.white)
+            .cornerRadius(Constants.cornerRadius)
+    }
+
+    var secondPlayerButton: some View {
+        Text("\(gameViewModel.secondPlayer.name)")
+            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
+            .background(gameViewModel.secondPlayerButtonColor)
+            .foregroundColor(.white)
+            .cornerRadius(Constants.cornerRadius)
+    }
+}

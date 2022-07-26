@@ -2,21 +2,16 @@ import Foundation
 import SwiftUI
 
 class GameViewModel: ObservableObject {
-    @Published private var gameModel: GameModel
-    private var countdown: Int = 10
-    @Published var timerTitle = ""
-    private var timer: Timer?
-    
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            self.timerTitle = "Time: \(self.countdown)"
-            if self.countdown >= 1 {
-                self.countdown -= 1
-            } else {
-                self.cleanUp()
-            }
-        }
+    private enum Constants {
+        static let playerTurnDuration: Int = 10
+        static let timeInterval: TimeInterval = 1.0
+        static let delay: Double = 0.5
     }
+    
+    @Published private var gameModel: GameModel
+    private var countdown = Constants.playerTurnDuration
+    private var timer: Timer?
+    @Published var timerTitle = ""
     
     var cardsOnScreen: [CardModel] {
         gameModel.cardsOnTheScreen
@@ -26,13 +21,27 @@ class GameViewModel: ObservableObject {
         gameModel.deck
     }
     
-    init(gameModel: GameModel) {
-        self.gameModel = gameModel
-    }
-    
     var isMoreCardAvailable: Bool {
         return deck.isEmpty
     }
+    
+    var firstPlayer: Player {
+        gameModel.firstPlayer
+    }
+    
+    var secondPlayer: Player {
+        gameModel.secondPlayer
+    }
+    
+    var isFirstPlayerActive: Bool {
+        firstPlayer.id == whoseTurn?.id
+    }
+    
+    var isSecondPlayerActive: Bool {
+        secondPlayer.id == whoseTurn?.id
+    }
+    
+    var whoseTurn: Player?
     
     var moreCardsButtonColor: Color {
         isMoreCardAvailable ? .gray : .black
@@ -58,23 +67,27 @@ class GameViewModel: ObservableObject {
         }
     }
     
-    var firstPlayer: Player {
-        gameModel.firstPlayer
+    init(gameModel: GameModel) {
+        self.gameModel = gameModel
     }
     
-    var secondPlayer: Player {
-        gameModel.secondPlayer
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: Constants.timeInterval, repeats: true) { _ in
+            self.timerTitle = "Time: \(self.countdown)"
+            if self.countdown >= 1 {
+                self.countdown -= 1
+            } else {
+                self.cleanUp()
+            }
+        }
     }
     
-    var isFirstPlayerActive: Bool {
-        firstPlayer.id == whoseTurn?.id
+    private func cleanUp() {
+        whoseTurn = nil
+        timer?.invalidate()
+        timerTitle = ""
+        countdown = Constants.playerTurnDuration
     }
-    
-    var isSecondPlayerActive: Bool {
-        secondPlayer.id == whoseTurn?.id
-    }
-    
-    var whoseTurn: Player?
         
     // MARK: - Inents
     
@@ -96,10 +109,6 @@ class GameViewModel: ObservableObject {
             return
         }
         
-        // test comment
-        print("Select method: \(player.name)")
-        // END: test comment
-        
         guard let chousenCard = cardsOnScreen.first(where: { $0.id == card.id }) else {
             print("Card is out of scope")
             return
@@ -107,18 +116,11 @@ class GameViewModel: ObservableObject {
         
         let matchStatus = gameModel.toggleCard(by: chousenCard.id)
         if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.delay) { [weak self] in
                 self?.gameModel.finishTurn(for: matchStatus, player: player)
                 self?.cleanUp()
             }
         }
-    }
-    
-    private func cleanUp() {
-        whoseTurn = nil
-        timer?.invalidate()
-        timerTitle = ""
-        countdown = 10
     }
     
     func didSelect(player: Player) {
@@ -130,7 +132,6 @@ class GameViewModel: ObservableObject {
         guard let player = whoseTurn else {
             return
         }
-        
         select(card, player)
     }
 }
