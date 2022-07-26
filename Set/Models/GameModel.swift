@@ -11,9 +11,12 @@ struct GameModel {
     
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
-    var deckBuilder: DeckBuilder
+    let deckBuilder: DeckBuilder
     var firstPlayer: Player
     var secondPlayer: Player
+    var startGameDate: Date
+    var previousMatchDate: Date?
+    var previousMatchTimeInterval: TimeInterval?
     
     init(
         deckBuilder: DeckBuilder,
@@ -23,6 +26,7 @@ struct GameModel {
         self.deckBuilder = deckBuilder
         self.firstPlayer = firstPlayer
         self.secondPlayer = secondPlayer
+        startGameDate = .now
         startNewGame()
     }
     
@@ -112,7 +116,7 @@ struct GameModel {
         }
     }
     
-    mutating private func sortOutMatchedCards() {
+    private mutating func sortOutMatchedCards() {
         for _ in cardsOnTheScreen {
             let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
             if let index = index {
@@ -122,15 +126,37 @@ struct GameModel {
         }
     }
     
-    mutating private func getBonus(for player: Player) {
+    private mutating func isFasterThanPreviousMatch() -> Bool {
+        let matchDate = Date.now
+        let matchTimeInterval = matchDate.timeIntervalSince(previousMatchDate ?? startGameDate)
+        
+        guard let previousMatchTimeInterval = previousMatchTimeInterval else {
+            self.previousMatchTimeInterval = matchTimeInterval
+            previousMatchDate = matchDate
+            return false
+        }
+        
+        self.previousMatchTimeInterval = matchTimeInterval
+        previousMatchDate = matchDate
+        
+        return matchTimeInterval < previousMatchTimeInterval
+    }
+    
+    private mutating func getBonus(for player: Player) {
+        var bonus = Constants.defaultBonus
+        
+        if isFasterThanPreviousMatch() {
+            bonus += 1
+        }
+        
         if player.id == firstPlayer.id {
-            firstPlayer.increaseScore(by: Constants.defaultBonus)
-        } else if player.id == secondPlayer.id{
-            secondPlayer.increaseScore(by: Constants.defaultBonus)
+            firstPlayer.increaseScore(by: bonus)
+        } else if player.id == secondPlayer.id {
+            secondPlayer.increaseScore(by: bonus)
         }
     }
     
-    mutating private func getPenalty(for player: Player) {
+    private mutating func getPenalty(for player: Player) {
         if player.id == firstPlayer.id, firstPlayer.score != 0 {
             firstPlayer.decreaseScore(by: Constants.defaultPenalty)
         } else if player.id == secondPlayer.id, secondPlayer.score != 0 {
