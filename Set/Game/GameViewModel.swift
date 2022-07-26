@@ -114,10 +114,10 @@ class GameViewModel: ObservableObject {
             return
         }
         
-        let matchStatus = gameModel.toggleCard(by: chousenCard.id)
+        let matchStatus = gameModel.makeTurn(for: chousenCard.id, player: player)
         if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
             DispatchQueue.main.asyncAfter(deadline: .now() + Constants.matchAnimationDuration) { [weak self] in
-                self?.gameModel.finishTurn(for: matchStatus, player: player)
+                self?.gameModel.finishTurn(for: matchStatus)
                 self?.cleanUp()
             }
         }

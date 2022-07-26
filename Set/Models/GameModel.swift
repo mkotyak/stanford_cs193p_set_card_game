@@ -15,8 +15,8 @@ struct GameModel {
     var firstPlayer: Player
     var secondPlayer: Player
     var startGameDate: Date
-    var previousMatchDate: Date?
-    var previousMatchTimeInterval: TimeInterval?
+    var previousSuccesfullMatchDate: Date?
+    var previousTurnDuration: TimeInterval?
     
     init(
         deckBuilder: DeckBuilder,
@@ -26,7 +26,7 @@ struct GameModel {
         self.deckBuilder = deckBuilder
         self.firstPlayer = firstPlayer
         self.secondPlayer = secondPlayer
-        startGameDate = .now
+        self.startGameDate = .now
         startNewGame()
     }
     
@@ -73,7 +73,7 @@ struct GameModel {
         self.cardsOnTheScreen = cardsOnTheScreen
     }
 
-    mutating func toggleCard(by cardId: UUID) -> MatchSuccessStatus {
+    mutating func makeTurn(for cardId: UUID, player: Player) -> MatchSuccessStatus {
         guard let chousenIndex = cardsOnTheScreen.firstIndex(where: { $0.id == cardId }) else {
             return .noMatch
         }
@@ -98,21 +98,43 @@ struct GameModel {
         }
         
         if checkASet(for: selectedCards) {
+            let currentSuccesfullMatchDate: Date = .now
+            let currentTurnDuration: TimeInterval = currentTurnDuration(for: currentSuccesfullMatchDate)
+            
             mark(selectedCards, as: .isMatchedSuccessfully)
+            
+            // I can move this logic to a method, but I don't know how to call it
+            if player.id == firstPlayer.id {
+                firstPlayer.increaseScore(by: calculateBonus(for: currentTurnDuration))
+            } else if player.id == secondPlayer.id {
+                secondPlayer.increaseScore(by: calculateBonus(for: currentTurnDuration))
+            }
+            // ------------------------------------------------------------------
+            
+            previousSuccesfullMatchDate = currentSuccesfullMatchDate
+            previousTurnDuration = currentTurnDuration
+            
             return .successfulMatch
         } else {
             mark(selectedCards, as: .isMatchedUnsuccessfully)
+            
+            // I can move this logic to a method, but I don't know how to call it
+            if player.id == firstPlayer.id, firstPlayer.score != 0 {
+                firstPlayer.decreaseScore(by: Constants.defaultPenalty)
+            } else if player.id == secondPlayer.id, secondPlayer.score != 0 {
+                secondPlayer.decreaseScore(by: Constants.defaultPenalty)
+            }
+            // ------------------------------------------------------------------
+            
             return .unsuccessfulMatch
         }
     }
     
-    mutating func finishTurn(for matchStatus: MatchSuccessStatus, player: Player) {
+    mutating func finishTurn(for matchStatus: MatchSuccessStatus) {
         if matchStatus == .successfulMatch {
-            getBonus(for: player)
             sortOutMatchedCards()
         } else if matchStatus == .unsuccessfulMatch {
             resetCardsState()
-            getPenalty(for: player)
         }
     }
     
@@ -126,42 +148,23 @@ struct GameModel {
         }
     }
     
-    private mutating func isFasterThanPreviousMatch() -> Bool {
-        let matchDate = Date.now
-        let matchTimeInterval = matchDate.timeIntervalSince(previousMatchDate ?? startGameDate)
-        
-        guard let previousMatchTimeInterval = previousMatchTimeInterval else {
-            self.previousMatchTimeInterval = matchTimeInterval
-            previousMatchDate = matchDate
-            return false
-        }
-        
-        self.previousMatchTimeInterval = matchTimeInterval
-        previousMatchDate = matchDate
-        
-        return matchTimeInterval < previousMatchTimeInterval
+    private func currentTurnDuration(for turnDate: Date) -> TimeInterval {
+        return turnDate.timeIntervalSince(previousSuccesfullMatchDate ?? startGameDate)
     }
     
-    private mutating func getBonus(for player: Player) {
-        var bonus = Constants.defaultBonus
+    private func calculateBonus(for timeDuration: TimeInterval) -> Int {
+        var bonus: Int = 0
         
-        if isFasterThanPreviousMatch() {
-            bonus += 1
+        if let previousTurnDuration = previousTurnDuration {
+            if timeDuration < previousTurnDuration {
+                bonus = Constants.defaultBonus + 1
+            } else {
+                bonus = Constants.defaultBonus
+            }
+        } else {
+            bonus = Constants.defaultBonus
         }
-        
-        if player.id == firstPlayer.id {
-            firstPlayer.increaseScore(by: bonus)
-        } else if player.id == secondPlayer.id {
-            secondPlayer.increaseScore(by: bonus)
-        }
-    }
-    
-    private mutating func getPenalty(for player: Player) {
-        if player.id == firstPlayer.id, firstPlayer.score != 0 {
-            firstPlayer.decreaseScore(by: Constants.defaultPenalty)
-        } else if player.id == secondPlayer.id, secondPlayer.score != 0 {
-            secondPlayer.decreaseScore(by: Constants.defaultPenalty)
-        }
+        return bonus
     }
     
     private mutating func resetGame() {
@@ -215,7 +218,7 @@ struct GameModel {
         cardsOnTheScreen.insert(removedCard, at: index)
     }
     
-    //    private func isMoreSetAvailable() -> Bool {
-    //        return true
-    //    }
+//        private func isMoreSetAvailable() -> Bool {
+//            return true
+//        }
 }
