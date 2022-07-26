@@ -125,6 +125,10 @@ class GameViewModel: ObservableObject {
     
     func didSelect(player: Player) {
         whoseTurn = player
+
+        guard timer == nil || timer?.isValid == false else {
+            return
+        }
         startTimer()
     }
     
