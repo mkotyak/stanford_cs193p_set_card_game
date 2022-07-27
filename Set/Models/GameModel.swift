@@ -12,6 +12,9 @@ struct GameModel {
     
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
+    var isMoreMatchesOnScreenAvailable: Bool {
+        return availableSetsOnScreen.isEmpty
+    }
     let deckBuilder: DeckBuilder
     var firstPlayer: Player
     var secondPlayer: Player
@@ -19,9 +22,7 @@ struct GameModel {
     var previousSuccesfullMatchDate: Date?
     var previousTurnDuration: TimeInterval?
     var availableSetsOnScreen: [[CardModel]] = []
-    var isNoMoreSetAvailable: Bool {
-        return availableSetsOnScreen.isEmpty
-    }
+    
     
     init(
         deckBuilder: DeckBuilder,
@@ -127,7 +128,7 @@ struct GameModel {
             sortOutMatchedCards()
             recalculateAvailableSetsOnScreen()
             
-            if deck.isEmpty && isNoMoreSetAvailable == true {
+            if deck.isEmpty && !isMoreMatchesOnScreenAvailable {
                 print("No more sets")
                 startNewGame()
             }
