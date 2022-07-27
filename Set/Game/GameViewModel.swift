@@ -12,7 +12,7 @@ class GameViewModel: ObservableObject {
     private var countdown = Constants.playerTurnDuration
     private var timer: Timer?
     @Published var timerTitle = ""
-    var isColorBlindModeEnabled: Bool
+    let isColorBlindModeEnabled: Bool
     
     var cardsOnScreen: [CardModel] {
         gameModel.cardsOnTheScreen
@@ -68,7 +68,7 @@ class GameViewModel: ObservableObject {
         }
     }
     
-    init(gameModel: GameModel, _ isColorBlindModeEnabled: Bool) {
+    init(gameModel: GameModel, isColorBlindModeEnabled: Bool) {
         self.gameModel = gameModel
         self.isColorBlindModeEnabled = isColorBlindModeEnabled
     }

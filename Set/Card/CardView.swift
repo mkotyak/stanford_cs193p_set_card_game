@@ -4,9 +4,9 @@ struct CardView: View {
     private enum Constants {
         static let cornerRadius: CGFloat = 15
         static let borderWidth: CGFloat = 2
-        static let shapeImageScale: CGFloat = 0.6
+        static let shapeImageScale: CGFloat = 0.55
         static let colorTextTopPadding: CGFloat = 8
-        static let colorTextFontSize: CGFloat = 12
+        static let colorTextFontSize: CGFloat = 11
         static let cardsPadding: CGFloat = 5
     }
 
@@ -21,25 +21,31 @@ struct CardView: View {
                     .foregroundColor(cardViewModel.strokeColor)
 
                 if cardViewModel.isColorBlindModeEnabled {
-                    VStack(alignment: .leading) {
-                        Text("\(cardViewModel.contentColorDefinition)")
-                            .font(.system(size: Constants.colorTextFontSize))
-                        Spacer()
-                    }
-                    .padding(.top, Constants.colorTextTopPadding)
+                    colorBlindBlock
                 }
-                
+
                 VStack {
                     ForEach(0 ..< cardViewModel.numOfShapes, id: \.self) { _ in
                         cardViewModel.shapeImage
                             .resizable()
                             .scaledToFit()
-                            .frame(width: min(geometry.size.height, geometry.size.width) * Constants.shapeImageScale)
+                            .frame(width:
+                                min(geometry.size.height, geometry.size.width) * Constants.shapeImageScale
+                            )
                     }
                     .foregroundColor(cardViewModel.contentColor)
                 }
             }
         }
         .padding(.all, Constants.cardsPadding)
+    }
+
+    private var colorBlindBlock: some View {
+        VStack(alignment: .leading) {
+            Text("\(cardViewModel.contentColorDefinition)")
+                .font(.system(size: Constants.colorTextFontSize))
+            Spacer()
+        }
+        .padding(.top, Constants.colorTextTopPadding)
     }
 }

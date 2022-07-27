@@ -7,9 +7,9 @@ class CardViewModel: ObservableObject {
     }
     
     @Published private var card: CardModel
-    var isColorBlindModeEnabled: Bool
+    let isColorBlindModeEnabled: Bool
     
-    init(card: CardModel, _ isColorBlindModeEnabled: Bool) {
+    init(card: CardModel, isColorBlindModeEnabled: Bool) {
         self.card = card
         self.isColorBlindModeEnabled = isColorBlindModeEnabled
     }

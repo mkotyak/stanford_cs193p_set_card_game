@@ -7,13 +7,10 @@ struct StartGameView: View {
     var body: some View {
         NavigationView {
             VStack {
-                NavigationLink(destination: gameViewBuilder.build(startGameViewModel.isColorBlindModeEnabled)) {
-                    Text("Start the game")
-                        .font(.largeTitle)
-                        .frame(width: 280, height: 55)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                NavigationLink(destination: gameViewBuilder.build(
+                    isColorBlindModeEnabled: startGameViewModel.isColorBlindModeEnabled)
+                ) {
+                    startTheGameButton
                 }
                 Spacer()
                 Toggle(isOn: $startGameViewModel.isColorBlindModeEnabled) {
@@ -22,5 +19,14 @@ struct StartGameView: View {
                 .padding(.horizontal, 25)
             }
         }
+    }
+
+    private var startTheGameButton: some View {
+        Text("Start the game")
+            .font(.largeTitle)
+            .frame(width: 280, height: 55)
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
     }
 }
