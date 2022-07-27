@@ -19,6 +19,9 @@ struct GameModel {
     var previousSuccesfullMatchDate: Date?
     var previousTurnDuration: TimeInterval?
     var availableSetsOnScreen: [[CardModel]] = []
+    var isNoMoreSetAvailable: Bool {
+        return availableSetsOnScreen.isEmpty
+    }
     
     init(
         deckBuilder: DeckBuilder,
@@ -47,7 +50,7 @@ struct GameModel {
             cardsOnTheScreen.append(removedCard)
         }
         
-        recalculateAvailableSetsOnScreen(from: cardsOnTheScreen)
+        recalculateAvailableSetsOnScreen()
     }
 
     mutating func startNewGame() {
@@ -63,9 +66,9 @@ struct GameModel {
 //        // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
         
         var cardsOnTheScreen: [CardModel] = []
-//        for _ in 1 ... Constants.defaultCardsOnScreenCount {
+        for _ in 1 ... Constants.defaultCardsOnScreenCount {
             // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
-            for _ in 1 ... 6 {
+//            for _ in 1 ... 6 {
             // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
             let removedCard = deck.removeFirst()
             cardsOnTheScreen.append(removedCard)
@@ -73,7 +76,7 @@ struct GameModel {
         
         self.deck = deck
         self.cardsOnTheScreen = cardsOnTheScreen
-        recalculateAvailableSetsOnScreen(from: cardsOnTheScreen)
+        recalculateAvailableSetsOnScreen()
     }
 
     mutating func makeTurn(for cardId: UUID, player: Player) -> MatchSuccessStatus {
@@ -122,7 +125,13 @@ struct GameModel {
     mutating func finishTurn(for matchStatus: MatchSuccessStatus) {
         if matchStatus == .successfulMatch {
             sortOutMatchedCards()
-            recalculateAvailableSetsOnScreen(from: cardsOnTheScreen)
+            recalculateAvailableSetsOnScreen()
+            
+            if deck.isEmpty && isNoMoreSetAvailable == true {
+                print("No more sets")
+                startNewGame()
+            }
+            
         } else if matchStatus == .unsuccessfulMatch {
             resetCardsState()
         }
@@ -227,20 +236,20 @@ struct GameModel {
         cardsOnTheScreen.insert(removedCard, at: index)
     }
     
-    private mutating func recalculateAvailableSetsOnScreen(from cardsOnScreen: [CardModel]) {
+    private mutating func recalculateAvailableSetsOnScreen() {
         if !availableSetsOnScreen.isEmpty {
             availableSetsOnScreen = []
         }
         
         var allCardsCombinations: [[CardModel]] = []
         
-        for i1 in cardsOnScreen.indices {
-            for i2 in i1 + 1 ..< cardsOnScreen.count {
-                for i3 in i2 + 1 ..< cardsOnScreen.count {
+        for i1 in cardsOnTheScreen.indices {
+            for i2 in i1 + 1 ..< cardsOnTheScreen.count {
+                for i3 in i2 + 1 ..< cardsOnTheScreen.count {
                     allCardsCombinations.append([
-                        cardsOnScreen[i1],
-                        cardsOnScreen[i2],
-                        cardsOnScreen[i3]
+                        cardsOnTheScreen[i1],
+                        cardsOnTheScreen[i2],
+                        cardsOnTheScreen[i3]
                     ])
                 }
             }
