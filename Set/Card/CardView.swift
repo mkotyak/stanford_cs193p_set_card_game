@@ -4,7 +4,10 @@ struct CardView: View {
     private enum Constants {
         static let cornerRadius: CGFloat = 15
         static let borderWidth: CGFloat = 2
-        static let shapeImageScale: CGFloat = 0.8
+        static let shapeImageScale: CGFloat = 0.6
+        static let colorTextTopPadding: CGFloat = 8
+        static let colorTextFontSize: CGFloat = 12
+        static let cardsPadding: CGFloat = 5
     }
 
     @ObservedObject var cardViewModel: CardViewModel
@@ -16,10 +19,17 @@ struct CardView: View {
                 shape.fill(cardViewModel.backroundColor)
                 shape.strokeBorder(lineWidth: Constants.borderWidth)
                     .foregroundColor(cardViewModel.strokeColor)
-                VStack {
-                    if cardViewModel.isColorBlindModeEnabled {
-                        Text("Red")
+
+                if cardViewModel.isColorBlindModeEnabled {
+                    VStack(alignment: .leading) {
+                        Text("\(cardViewModel.contentColorDefinition)")
+                            .font(.system(size: Constants.colorTextFontSize))
+                        Spacer()
                     }
+                    .padding(.top, Constants.colorTextTopPadding)
+                }
+                
+                VStack {
                     ForEach(0 ..< cardViewModel.numOfShapes, id: \.self) { _ in
                         cardViewModel.shapeImage
                             .resizable()
@@ -30,6 +40,6 @@ struct CardView: View {
                 }
             }
         }
-        .padding()
+        .padding(.all, Constants.cardsPadding)
     }
 }

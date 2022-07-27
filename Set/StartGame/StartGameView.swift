@@ -6,15 +6,21 @@ struct StartGameView: View {
 
     var body: some View {
         NavigationView {
-            NavigationLink(destination: gameViewBuilder.build(startGameViewModel.isColorBlindModeEnabled)) {
-                Text("Start the game")
-                    .font(.largeTitle)
-                    .frame(width: 280, height: 55)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+            VStack {
+                NavigationLink(destination: gameViewBuilder.build(startGameViewModel.isColorBlindModeEnabled)) {
+                    Text("Start the game")
+                        .font(.largeTitle)
+                        .frame(width: 280, height: 55)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+                Spacer()
+                Toggle(isOn: $startGameViewModel.isColorBlindModeEnabled) {
+                    Text("Enable color-blind mode")
+                }
+                .padding(.horizontal, 25)
             }
-            .padding(.bottom, 120)
         }
     }
 }

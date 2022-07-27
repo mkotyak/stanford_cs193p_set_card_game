@@ -54,6 +54,17 @@ class CardViewModel: ObservableObject {
         }
     }
     
+    var contentColorDefinition: String {
+        switch card.content.color {
+        case .green:
+            return "Green"
+        case .red:
+            return "Red"
+        case .purple:
+            return "Purple"
+        }
+    }
+    
     var shapeImage: Image {
         switch card.content.shape {
         case .oval:
