@@ -13,10 +13,13 @@ struct GameView: View {
     var body: some View {
         VStack {
             AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
-                cardViewBuilder.build(for: card)
-                    .onTapGesture {
-                        gameViewModel.didSelect(card: card)
-                    }
+                cardViewBuilder.build(
+                    for: card,
+                    isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+                )
+                .onTapGesture {
+                    gameViewModel.didSelect(card: card)
+                }
             }
             .navigationTitle("\(gameViewModel.timerTitle)")
             .navigationBarTitleDisplayMode(.inline)
@@ -33,7 +36,8 @@ struct GameView: View {
                     gameViewModel.startNewGame()
                 } label: {
                     newGameButton
-                })
+                }
+            )
 
             HStack {
                 Button {
@@ -59,7 +63,7 @@ struct GameView: View {
         }
     }
 
-    var threeMoreCardsButton: some View {
+    private var threeMoreCardsButton: some View {
         Text("+3 cards")
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(gameViewModel.moreCardsButtonColor)
@@ -67,7 +71,7 @@ struct GameView: View {
             .cornerRadius(Constants.buttonCornerRadius)
     }
 
-    var newGameButton: some View {
+    private var newGameButton: some View {
         Text("New game")
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(.black)
@@ -75,7 +79,7 @@ struct GameView: View {
             .cornerRadius(Constants.buttonCornerRadius)
     }
 
-    var firstPlayerButton: some View {
+    private var firstPlayerButton: some View {
         Text("\(gameViewModel.firstPlayer.name)")
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(gameViewModel.firstPlayerButtonColor)
@@ -83,7 +87,7 @@ struct GameView: View {
             .cornerRadius(Constants.buttonCornerRadius)
     }
 
-    var secondPlayerButton: some View {
+    private var secondPlayerButton: some View {
         Text("\(gameViewModel.secondPlayer.name)")
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
             .background(gameViewModel.secondPlayerButtonColor)
