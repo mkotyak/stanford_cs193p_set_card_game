@@ -12,7 +12,7 @@ struct GameModel {
     
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
-    var isMoreMatchesOnScreenAvailable: Bool {
+    var isMoreSetsOnScreenAvailable: Bool {
         return availableSetsOnScreen.isEmpty
     }
     let deckBuilder: DeckBuilder
@@ -128,7 +128,7 @@ struct GameModel {
             sortOutMatchedCards()
             recalculateAvailableSetsOnScreen()
             
-            if deck.isEmpty && !isMoreMatchesOnScreenAvailable {
+            if deck.isEmpty && !isMoreSetsOnScreenAvailable {
                 print("No more sets")
                 startNewGame()
             }
