@@ -2,10 +2,11 @@ import SwiftUI
 
 struct StartGameView: View {
     let gameViewBuilder: GameViewBuilder
+    @ObservedObject var startGameViewModel: StartGameViewModel
 
     var body: some View {
         NavigationView {
-            NavigationLink(destination: gameViewBuilder.build()) {
+            NavigationLink(destination: gameViewBuilder.build(startGameViewModel.isColorBlindModeEnabled)) {
                 Text("Start the game")
                     .font(.largeTitle)
                     .frame(width: 280, height: 55)

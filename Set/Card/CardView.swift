@@ -17,6 +17,9 @@ struct CardView: View {
                 shape.strokeBorder(lineWidth: Constants.borderWidth)
                     .foregroundColor(cardViewModel.strokeColor)
                 VStack {
+                    if cardViewModel.isColorBlindModeEnabled {
+                        Text("Red")
+                    }
                     ForEach(0 ..< cardViewModel.numOfShapes, id: \.self) { _ in
                         cardViewModel.shapeImage
                             .resizable()

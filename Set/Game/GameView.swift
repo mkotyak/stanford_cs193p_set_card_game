@@ -13,7 +13,7 @@ struct GameView: View {
     var body: some View {
         VStack {
             AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
-                cardViewBuilder.build(for: card)
+                cardViewBuilder.build(for: card, gameViewModel.isColorBlindModeEnabled)
                     .onTapGesture {
                         gameViewModel.didSelect(card: card)
                     }

@@ -15,6 +15,7 @@ struct GameModel {
     var isMoreSetsOnScreenAvailable: Bool {
         return availableSetsOnScreen.isEmpty
     }
+
     let deckBuilder: DeckBuilder
     var firstPlayer: Player
     var secondPlayer: Player
