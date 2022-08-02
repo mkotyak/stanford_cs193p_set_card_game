@@ -5,6 +5,13 @@ struct GameView: View {
         static let buttonFrameWidth: CGFloat = 95
         static let buttonFrameHeight: CGFloat = 30
         static let buttonCornerRadius: CGFloat = 10
+        static let discardPileBlockWidth: CGFloat = 50
+        static let discardPileBlockHeight: CGFloat = 80
+        static let discardPileBlockCornerRadius: CGFloat = 15
+        static let discardPileBlockBorderLines: CGFloat = 2
+        static let deckBlockWidth: CGFloat = 60
+        static let deckBlockHeight: CGFloat = 90
+        static let deckTextSize: CGFloat = 10
     }
 
     @ObservedObject var gameViewModel: GameViewModel
@@ -38,11 +45,17 @@ struct GameView: View {
                     newGameButton
                 }
             )
-
-            // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            Text("Score: \(gameViewModel.score)")
-                .bold()
-            // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            HStack {
+                deckBlock
+                Spacer()
+                // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                Text("Score: \(gameViewModel.score)")
+                    .bold()
+                // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                Spacer()
+                discardPileBlock
+            }
+            .padding(.horizontal, 30)
 
 //            HStack {
 //                Button {
@@ -65,6 +78,31 @@ struct GameView: View {
 //                .disabled(gameViewModel.isFirstPlayerActive)
 //            }
 //            .padding()
+        }
+    }
+    
+    private var discardPileBlock: some View {
+        VStack {
+            RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
+                .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
+                .frame(width: Constants.discardPileBlockWidth, height: Constants.discardPileBlockHeight)
+            Text("Discard pile").font(.system(size: Constants.deckTextSize))
+        }
+    }
+    
+    private var deckBlock: some View {
+        VStack {
+            ZStack {
+                ForEach(gameViewModel.deck) { card in
+                    cardViewBuilder.build(
+                        for: card,
+                        isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+                    )
+                }
+            }
+            .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
+            
+            Text("Deck").font(.system(size: Constants.deckTextSize))
         }
     }
 
