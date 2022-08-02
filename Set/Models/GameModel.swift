@@ -16,24 +16,25 @@ struct GameModel {
         return availableSetsOnScreen.isEmpty
     }
 
+    var score: Int
     let deckBuilder: DeckBuilder
-    var firstPlayer: Player
-    var secondPlayer: Player
+//    var firstPlayer: Player
+//    var secondPlayer: Player
     var startGameDate: Date
     var previousSuccesfullMatchDate: Date?
     var previousTurnDuration: TimeInterval?
     var availableSetsOnScreen: [[CardModel]] = []
     
-    
     init(
-        deckBuilder: DeckBuilder,
-        firstPlayer: Player,
-        secondPlayer: Player
+        deckBuilder: DeckBuilder
+//        firstPlayer: Player,
+//        secondPlayer: Player
     ) {
         self.deckBuilder = deckBuilder
-        self.firstPlayer = firstPlayer
-        self.secondPlayer = secondPlayer
-        self.startGameDate = .now
+//        self.firstPlayer = firstPlayer
+//        self.secondPlayer = secondPlayer
+        startGameDate = .now
+        score = 0
         startNewGame()
     }
     
@@ -43,15 +44,15 @@ struct GameModel {
         }
         
         if !availableSetsOnScreen.isEmpty {
-            decreaseScore(playerID: firstPlayer.id, value: 1)
-            decreaseScore(playerID: secondPlayer.id, value: 1)
+            decreaseScore(value: 1)
+//            decreaseScore(playerID: firstPlayer.id, value: 1)
+//            decreaseScore(playerID: secondPlayer.id, value: 1)
         }
 
         for _ in 0 ..< min(Constants.cardsToDealCount, deck.count) {
             let removedCard = deck.removeFirst()
             cardsOnTheScreen.append(removedCard)
         }
-        
         recalculateAvailableSetsOnScreen()
     }
 
@@ -80,8 +81,9 @@ struct GameModel {
         self.cardsOnTheScreen = cardsOnTheScreen
         recalculateAvailableSetsOnScreen()
     }
-
-    mutating func makeTurn(for cardId: UUID, player: Player) -> MatchSuccessStatus {
+    
+//    mutating func makeTurn(for cardId: UUID, player: Player) -> MatchSuccessStatus {
+    mutating func makeTurn(for cardId: UUID) -> MatchSuccessStatus {
         guard let chousenIndex = cardsOnTheScreen.firstIndex(where: { $0.id == cardId }) else {
             return .noMatch
         }
@@ -111,14 +113,16 @@ struct GameModel {
             let bonus: Int = calculateBonus(for: currentTurnDuration)
             
             mark(selectedCards, as: .isMatchedSuccessfully)
-            increaseScore(playerID: player.id, value: bonus)
+            increaseScore(value: bonus)
+//            increaseScore(playerID: player.id, value: bonus)
             previousSuccesfullMatchDate = currentSuccesfullMatchDate
             previousTurnDuration = currentTurnDuration
             
             return .successfulMatch
         } else {
             mark(selectedCards, as: .isMatchedUnsuccessfully)
-            decreaseScore(playerID: player.id, value: Constants.defaultPenalty)
+            decreaseScore(value: Constants.defaultPenalty)
+//            decreaseScore(playerID: player.id, value: Constants.defaultPenalty)
     
             return .unsuccessfulMatch
         }
@@ -129,7 +133,7 @@ struct GameModel {
             sortOutMatchedCards()
             recalculateAvailableSetsOnScreen()
             
-            if deck.isEmpty && !isMoreSetsOnScreenAvailable {
+            if deck.isEmpty, !isMoreSetsOnScreenAvailable {
                 print("No more sets")
                 startNewGame()
             }
@@ -168,27 +172,40 @@ struct GameModel {
         return bonus
     }
     
-    private mutating func increaseScore(playerID: UUID, value: Int) {
-        if playerID == firstPlayer.id {
-            firstPlayer.increaseScore(by: value)
-        } else if playerID == secondPlayer.id {
-            secondPlayer.increaseScore(by: value)
-        }
+//    private mutating func increaseScore(playerID: UUID, value: Int) {
+//        if playerID == firstPlayer.id {
+//            firstPlayer.increaseScore(by: value)
+//        } else if playerID == secondPlayer.id {
+//            secondPlayer.increaseScore(by: value)
+//        }
+//    }
+//
+//    private mutating func decreaseScore(playerID: UUID, value: Int) {
+//        if playerID == firstPlayer.id, firstPlayer.score != 0 {
+//            firstPlayer.decreaseScore(by: value)
+//        } else if playerID == secondPlayer.id, secondPlayer.score != 0 {
+//            secondPlayer.decreaseScore(by: value)
+//        }
+//    }
+
+    // function for solo version of the game
+    private mutating func increaseScore(value: Int) {
+        score += value
     }
     
-    private mutating func decreaseScore(playerID: UUID, value: Int) {
-        if playerID == firstPlayer.id, firstPlayer.score != 0 {
-            firstPlayer.decreaseScore(by: value)
-        } else if playerID == secondPlayer.id, secondPlayer.score != 0 {
-            secondPlayer.decreaseScore(by: value)
+    // function for solo version of the game
+    private mutating func decreaseScore(value: Int) {
+        if score > 0 {
+            score -= value
         }
     }
-    
+
     private mutating func resetGame() {
         deck = []
         cardsOnTheScreen = []
-        firstPlayer.score = 0
-        secondPlayer.score = 0
+        score = 0
+//        firstPlayer.score = 0
+//        secondPlayer.score = 0
         previousTurnDuration = nil
         previousSuccesfullMatchDate = nil
         startGameDate = .now
