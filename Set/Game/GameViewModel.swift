@@ -26,47 +26,52 @@ class GameViewModel: ObservableObject {
         return deck.isEmpty
     }
     
-    var firstPlayer: Player {
-        gameModel.firstPlayer
+    // property for the solo version of the game
+    var score: Int {
+        gameModel.score
     }
     
-    var secondPlayer: Player {
-        gameModel.secondPlayer
-    }
+//    var firstPlayer: Player {
+//        gameModel.firstPlayer
+//    }
+//
+//    var secondPlayer: Player {
+//        gameModel.secondPlayer
+//    }
     
-    var isFirstPlayerActive: Bool {
-        firstPlayer.id == whoseTurn?.id
-    }
+//    var isFirstPlayerActive: Bool {
+//        firstPlayer.id == whoseTurn?.id
+//    }
+//
+//    var isSecondPlayerActive: Bool {
+//        secondPlayer.id == whoseTurn?.id
+//    }
     
-    var isSecondPlayerActive: Bool {
-        secondPlayer.id == whoseTurn?.id
-    }
-    
-    var whoseTurn: Player?
+//    var whoseTurn: Player?
     
     var moreCardsButtonColor: Color {
         isMoreCardAvailable ? .gray : .black
     }
     
-    var firstPlayerButtonColor: Color {
-        if firstPlayer.id == whoseTurn?.id {
-            return .green
-        } else if secondPlayer.id == whoseTurn?.id {
-            return .gray
-        } else {
-            return .black
-        }
-    }
-    
-    var secondPlayerButtonColor: Color {
-        if secondPlayer.id == whoseTurn?.id {
-            return .green
-        } else if firstPlayer.id == whoseTurn?.id {
-            return .gray
-        } else {
-            return .black
-        }
-    }
+//    var firstPlayerButtonColor: Color {
+//        if firstPlayer.id == whoseTurn?.id {
+//            return .green
+//        } else if secondPlayer.id == whoseTurn?.id {
+//            return .gray
+//        } else {
+//            return .black
+//        }
+//    }
+//
+//    var secondPlayerButtonColor: Color {
+//        if secondPlayer.id == whoseTurn?.id {
+//            return .green
+//        } else if firstPlayer.id == whoseTurn?.id {
+//            return .gray
+//        } else {
+//            return .black
+//        }
+//    }
     
     init(gameModel: GameModel, isColorBlindModeEnabled: Bool) {
         self.gameModel = gameModel
@@ -85,7 +90,7 @@ class GameViewModel: ObservableObject {
     }
     
     private func cleanUp() {
-        whoseTurn = nil
+//        whoseTurn = nil
         timer?.invalidate()
         timerTitle = ""
         countdown = Constants.playerTurnDuration
@@ -102,7 +107,8 @@ class GameViewModel: ObservableObject {
         gameModel.startNewGame()
     }
         
-    func select(_ card: CardModel, _ player: Player) {
+//    func select(_ card: CardModel, _ player: Player) {
+    func select(_ card: CardModel) {
         guard let timer = timer else {
             return
         }
@@ -116,7 +122,8 @@ class GameViewModel: ObservableObject {
             return
         }
         
-        let matchStatus = gameModel.makeTurn(for: chousenCard.id, player: player)
+//        let matchStatus = gameModel.makeTurn(for: chousenCard.id, player: player)
+        let matchStatus = gameModel.makeTurn(for: chousenCard.id)
         if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
             DispatchQueue.main.asyncAfter(deadline: .now() + Constants.matchAnimationDuration) { [weak self] in
                 self?.gameModel.finishTurn(for: matchStatus)
@@ -125,19 +132,26 @@ class GameViewModel: ObservableObject {
         }
     }
     
-    func didSelect(player: Player) {
-        whoseTurn = player
-
-        guard timer == nil || timer?.isValid == false else {
-            return
-        }
-        startTimer()
-    }
+//    func didSelect(player: Player) {
+//        whoseTurn = player
+//
+//        guard timer == nil || timer?.isValid == false else {
+//            return
+//        }
+//        startTimer()
+//    }
     
     func didSelect(card: CardModel) {
-        guard let player = whoseTurn else {
-            return
+//        guard let player = whoseTurn else {
+//            return
+//        }
+//        select(card, player)
+        
+        // code for the solo version of the game >>>>>>>>>>>
+        if timer == nil || timer?.isValid == false {
+            startTimer()
         }
-        select(card, player)
+        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        select(card)
     }
 }

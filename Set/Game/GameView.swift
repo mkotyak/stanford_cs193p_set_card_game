@@ -39,27 +39,32 @@ struct GameView: View {
                 }
             )
 
-            HStack {
-                Button {
-                    gameViewModel.didSelect(player: gameViewModel.firstPlayer)
-                } label: {
-                    firstPlayerButton
-                }
-                .disabled(gameViewModel.isSecondPlayerActive)
+            // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            Text("Score: \(gameViewModel.score)")
+                .bold()
+            // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-                Spacer()
-                Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
-                    .font(.largeTitle)
-                Spacer()
-
-                Button {
-                    gameViewModel.didSelect(player: gameViewModel.secondPlayer)
-                } label: {
-                    secondPlayerButton
-                }
-                .disabled(gameViewModel.isFirstPlayerActive)
-            }
-            .padding()
+//            HStack {
+//                Button {
+//                    gameViewModel.didSelect(player: gameViewModel.firstPlayer)
+//                } label: {
+//                    firstPlayerButton
+//                }
+//                .disabled(gameViewModel.isSecondPlayerActive)
+//
+//                Spacer()
+//                Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
+//                    .font(.largeTitle)
+//                Spacer()
+//
+//                Button {
+//                    gameViewModel.didSelect(player: gameViewModel.secondPlayer)
+//                } label: {
+//                    secondPlayerButton
+//                }
+//                .disabled(gameViewModel.isFirstPlayerActive)
+//            }
+//            .padding()
         }
     }
 
@@ -79,19 +84,19 @@ struct GameView: View {
             .cornerRadius(Constants.buttonCornerRadius)
     }
 
-    private var firstPlayerButton: some View {
-        Text("\(gameViewModel.firstPlayer.name)")
-            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-            .background(gameViewModel.firstPlayerButtonColor)
-            .foregroundColor(.white)
-            .cornerRadius(Constants.buttonCornerRadius)
-    }
-
-    private var secondPlayerButton: some View {
-        Text("\(gameViewModel.secondPlayer.name)")
-            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-            .background(gameViewModel.secondPlayerButtonColor)
-            .foregroundColor(.white)
-            .cornerRadius(Constants.buttonCornerRadius)
-    }
+//    private var firstPlayerButton: some View {
+//        Text("\(gameViewModel.firstPlayer.name)")
+//            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
+//            .background(gameViewModel.firstPlayerButtonColor)
+//            .foregroundColor(.white)
+//            .cornerRadius(Constants.buttonCornerRadius)
+//    }
+//
+//    private var secondPlayerButton: some View {
+//        Text("\(gameViewModel.secondPlayer.name)")
+//            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
+//            .background(gameViewModel.secondPlayerButtonColor)
+//            .foregroundColor(.white)
+//            .cornerRadius(Constants.buttonCornerRadius)
+//    }
 }
