@@ -19,32 +19,7 @@ struct GameView: View {
 
     var body: some View {
         VStack {
-            AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
-                cardViewBuilder.build(
-                    for: card,
-                    isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
-                )
-                .onTapGesture {
-                    gameViewModel.didSelect(card: card)
-                }
-            }
-            .navigationTitle("\(gameViewModel.timerTitle)")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(
-                leading: Button {
-                    gameViewModel.dealThreeMoreCards()
-                } label: {
-                    threeMoreCardsButton
-                }
-                .disabled(gameViewModel.isMoreCardAvailable),
-
-                trailing: Button {
-                    gameViewModel.startNewGame()
-                } label: {
-                    newGameButton
-                }
-            )
+            gameBlock
             HStack {
                 deckBlock
                 Spacer()
@@ -81,6 +56,39 @@ struct GameView: View {
         }
     }
     
+    private var gameBlock: some View {
+        AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
+            cardViewBuilder.build(
+                for: card,
+                isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+            )
+            .onTapGesture {
+                gameViewModel.didSelect(card: card)
+            }
+        }
+        .navigationTitle("\(gameViewModel.timerTitle)")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button {
+                withAnimation {
+                    gameViewModel.dealThreeMoreCards()
+                }
+            } label: {
+                threeMoreCardsButton
+            }
+            .disabled(gameViewModel.isMoreCardAvailable),
+
+            trailing: Button {
+                withAnimation {
+                    gameViewModel.startNewGame()
+                }
+            } label: {
+                newGameButton
+            }
+        )
+    }
+
     private var discardPileBlock: some View {
         VStack {
             RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
@@ -89,7 +97,7 @@ struct GameView: View {
             Text("Discard pile").font(.system(size: Constants.deckTextSize))
         }
     }
-    
+
     private var deckBlock: some View {
         VStack {
             ZStack {
@@ -101,7 +109,6 @@ struct GameView: View {
                 }
             }
             .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
-            
             Text("Deck").font(.system(size: Constants.deckTextSize))
         }
     }

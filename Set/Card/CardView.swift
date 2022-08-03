@@ -16,24 +16,31 @@ struct CardView: View {
         GeometryReader { geometry in
             ZStack {
                 let shape = RoundedRectangle(cornerRadius: Constants.cornerRadius)
-                shape.fill(cardViewModel.backroundColor)
-                shape.strokeBorder(lineWidth: Constants.borderWidth)
-                    .foregroundColor(cardViewModel.strokeColor)
+                if cardViewModel.cardIsFaceUp {
+                    shape.fill(cardViewModel.backroundColor)
+                    shape.strokeBorder(lineWidth: Constants.borderWidth)
+                        .foregroundColor(cardViewModel.strokeColor)
 
-                if cardViewModel.isColorBlindModeEnabled {
-                    colorBlindBlock
-                }
-
-                VStack {
-                    ForEach(0 ..< cardViewModel.numOfShapes, id: \.self) { _ in
-                        cardViewModel.shapeImage
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width:
-                                min(geometry.size.height, geometry.size.width) * Constants.shapeImageScale
-                            )
+                    if cardViewModel.isColorBlindModeEnabled {
+                        colorBlindBlock
                     }
-                    .foregroundColor(cardViewModel.contentColor)
+
+                    VStack {
+                        ForEach(0 ..< cardViewModel.numOfShapes, id: \.self) { _ in
+                            cardViewModel.shapeImage
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width:
+                                    min(geometry.size.height, geometry.size.width) * Constants.shapeImageScale
+                                )
+                        }
+                        .foregroundColor(cardViewModel.contentColor)
+                    }
+                } else {
+                    ZStack {
+                        shape.fill(.black)
+                        Text("Set").foregroundColor(.green)
+                    }
                 }
             }
         }
