@@ -60,25 +60,22 @@ struct GameModel {
         if !cardsOnTheScreen.isEmpty {
             resetGame()
         }
-        var deck = deckBuilder.createDeck()
+        let deck = deckBuilder.createDeck()
         
 //        // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
 //        for _ in 1 ... 54 {
 //            deck.removeLast()
 //        }
 //        // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
-        
-        var cardsOnTheScreen: [CardModel] = []
-        for _ in 1 ... Constants.defaultCardsOnScreenCount {
-            // test code to decrease deck >>>>>>>>>>>>>>>>>>>>>>
-//            for _ in 1 ... 6 {
-            // END: test code decrease deck >>>>>>>>>>>>>>>>>>>>
-            let removedCard = deck.removeFirst()
-            cardsOnTheScreen.append(removedCard)
-        }
-        
         self.deck = deck
-        self.cardsOnTheScreen = cardsOnTheScreen
+    }
+    
+    mutating func deal(card: CardModel) {
+        let index = deck.firstIndex(where: { $0.id == card.id })
+        if let index = index {
+            let cardToDeal = deck.remove(at: index)
+            cardsOnTheScreen.append(cardToDeal)
+        }
         recalculateAvailableSetsOnScreen()
     }
     

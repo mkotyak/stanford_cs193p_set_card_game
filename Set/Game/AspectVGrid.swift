@@ -20,7 +20,9 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
                                                        in: geometry.size,
                                                        itemAspectRatio: aspectRatio)
                     LazyVGrid(
-                        columns: [adaptiveGridItem(width: max(width, minWidthOfCard))],
+                        columns: [adaptiveGridItem(width: width)],
+//                        columns: [adaptiveGridItem(width: minWidthOfCard)],
+
                         spacing: 0
                     ) {
                         ForEach(items) { item in

@@ -16,6 +16,7 @@ struct GameView: View {
 
     @ObservedObject var gameViewModel: GameViewModel
     let cardViewBuilder: CardViewBuilder
+    @Namespace private var dealingNamespace
 
     var body: some View {
         VStack {
@@ -54,39 +55,43 @@ struct GameView: View {
 //            }
 //            .padding()
         }
-    }
-    
-    private var gameBlock: some View {
-        AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
-            cardViewBuilder.build(
-                for: card,
-                isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
-            )
-            .onTapGesture {
-                gameViewModel.didSelect(card: card)
-            }
-        }
         .navigationTitle("\(gameViewModel.timerTitle)")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(
             leading: Button {
-                withAnimation {
-                    gameViewModel.dealThreeMoreCards()
-                }
+                gameViewModel.dealThreeMoreCards()
             } label: {
                 threeMoreCardsButton
             }
             .disabled(gameViewModel.isMoreCardAvailable),
 
             trailing: Button {
-                withAnimation {
-                    gameViewModel.startNewGame()
-                }
+                gameViewModel.startNewGame()
             } label: {
                 newGameButton
             }
         )
+    }
+
+    private var gameBlock: some View {
+        AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
+            cardViewBuilder.build(
+                for: card,
+                isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+            )
+            .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+            .onTapGesture {
+                gameViewModel.didSelect(card: card)
+            }
+        }
+        .onAppear {
+            for i in 0 ..< 12 {
+                withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
+                    gameViewModel.deal(card: gameViewModel.deck[i])
+                }
+            }
+        }
     }
 
     private var discardPileBlock: some View {
@@ -106,6 +111,7 @@ struct GameView: View {
                         for: card,
                         isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
                     )
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                 }
             }
             .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
@@ -127,6 +133,14 @@ struct GameView: View {
             .background(.black)
             .foregroundColor(.white)
             .cornerRadius(Constants.buttonCornerRadius)
+    }
+
+    private func dealAnimation(for card: CardModel) -> Animation {
+        var delay = 0.0
+        if let index = gameViewModel.deck.firstIndex(where: { $0.id == card.id }) {
+            delay = Double(index) * 2 / Double(12)
+        }
+        return Animation.easeInOut(duration: 0.5).delay(delay)
     }
 
 //    private var firstPlayerButton: some View {
