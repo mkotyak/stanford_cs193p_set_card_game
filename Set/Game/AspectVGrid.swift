@@ -4,7 +4,8 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
     var items: [Item]
     var aspectRatio: CGFloat
     var content: (Item) -> ItemView
-    var expectedItemsCount: Int?
+//    var expectedItemsCount: Int?
+    var expectedItemsCount = 12
 
     init(items: [Item], aspectRatio: CGFloat, @ViewBuilder content: @escaping (Item) -> ItemView) {
         self.items = items
@@ -14,10 +15,13 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
 
     var body: some View {
         GeometryReader { geometry in
-            ScrollView (showsIndicators: false) {
+            ScrollView(showsIndicators: false) {
                 VStack {
                     let minWidthOfCard: CGFloat = 95
-                    let width: CGFloat = widthThatFits(itemCount: items.count,
+//                    let width: CGFloat = widthThatFits(itemCount: items.count,
+//                                                       in: geometry.size,
+//                                                       itemAspectRatio: aspectRatio)
+                    let width: CGFloat = widthThatFits(itemCount: expectedItemsCount,
                                                        in: geometry.size,
                                                        itemAspectRatio: aspectRatio)
                     LazyVGrid(

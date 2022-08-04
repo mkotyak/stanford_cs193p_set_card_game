@@ -4,7 +4,7 @@ import SwiftUI
 class GameViewModel: ObservableObject {
     private enum Constants {
         static let playerTurnDuration: Int = 10
-        static let timerFireInterval: TimeInterval = 1.0
+        static let timerFireInterval: TimeInterval = 0.8
         static let matchAnimationDuration: Double = 1
     }
     
@@ -97,11 +97,7 @@ class GameViewModel: ObservableObject {
     }
         
     // MARK: - Inents
-    
-    func dealThreeMoreCards() {
-        gameModel.dealThreeMoreCards()
-    }
-    
+
     func startNewGame() {
         cleanUp()
         gameModel.startNewGame()

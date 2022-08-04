@@ -13,6 +13,7 @@ struct GameView: View {
         static let deckBlockHeight: CGFloat = 90
         static let deckTextSize: CGFloat = 10
         static let defaultCardsOnScreenCount: Int = 12
+        static let cardsToDealCount: Int = 3
         static let dealAnimationDuration: Double = 0.5
     }
 
@@ -59,15 +60,8 @@ struct GameView: View {
         }
         .navigationTitle("\(gameViewModel.timerTitle)")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
+//        .navigationBarBackButtonHidden(true)
         .navigationBarItems(
-            leading: Button {
-                gameViewModel.dealThreeMoreCards()
-            } label: {
-                threeMoreCardsButton
-            }
-            .disabled(gameViewModel.isMoreCardAvailable),
-
             trailing: Button {
                 gameViewModel.startNewGame()
             } label: {
@@ -121,6 +115,14 @@ struct GameView: View {
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                 }
             }
+            .onTapGesture {
+                for i in 0 ..< Constants.cardsToDealCount {
+                    withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
+                        gameViewModel.deal(card: gameViewModel.deck[i])
+                    }
+                }
+            }
+            .disabled(gameViewModel.isMoreCardAvailable)
             .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
             Text("Deck").font(.system(size: Constants.deckTextSize))
         }

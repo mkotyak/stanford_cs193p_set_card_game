@@ -38,24 +38,6 @@ struct GameModel {
         startNewGame()
     }
     
-    mutating func dealThreeMoreCards() {
-        guard !deck.isEmpty else {
-            return
-        }
-        
-        if !availableSetsOnScreen.isEmpty {
-            decreaseScore(value: 1)
-//            decreaseScore(playerID: firstPlayer.id, value: 1)
-//            decreaseScore(playerID: secondPlayer.id, value: 1)
-        }
-
-        for _ in 0 ..< min(Constants.cardsToDealCount, deck.count) {
-            let removedCard = deck.removeFirst()
-            cardsOnTheScreen.append(removedCard)
-        }
-        recalculateAvailableSetsOnScreen()
-    }
-
     mutating func startNewGame() {
         if !cardsOnTheScreen.isEmpty {
             resetGame()
@@ -73,11 +55,13 @@ struct GameModel {
     mutating func deal(card: CardModel) {
         
         guard !deck.isEmpty else {
+            debugPrint("Deck is empty")
             return
         }
-        
+                
         let index = deck.firstIndex(where: { $0.id == card.id })
         if let index = index {
+            deck[index].isCardFaceUp = true
             let cardToDeal = deck.remove(at: index)
             cardsOnTheScreen.append(cardToDeal)
         }
