@@ -71,6 +71,11 @@ struct GameModel {
     }
     
     mutating func deal(card: CardModel) {
+        
+        guard !deck.isEmpty else {
+            return
+        }
+        
         let index = deck.firstIndex(where: { $0.id == card.id })
         if let index = index {
             let cardToDeal = deck.remove(at: index)

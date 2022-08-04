@@ -13,6 +13,7 @@ struct GameView: View {
         static let deckBlockHeight: CGFloat = 90
         static let deckTextSize: CGFloat = 10
         static let defaultCardsOnScreenCount: Int = 12
+        static let dealAnimationDuration: Double = 0.5
     }
 
     @ObservedObject var gameViewModel: GameViewModel
@@ -99,7 +100,10 @@ struct GameView: View {
         VStack {
             RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
                 .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
-                .frame(width: Constants.discardPileBlockWidth, height: Constants.discardPileBlockHeight)
+                .frame(
+                    width: Constants.discardPileBlockWidth,
+                    height: Constants.discardPileBlockHeight
+                )
             Text("Discard pile").font(.system(size: Constants.deckTextSize))
         }
     }
@@ -141,7 +145,7 @@ struct GameView: View {
         if let index = gameViewModel.deck.firstIndex(where: { $0.id == card.id }) {
             delay = Double(index) * 2 / Double(12)
         }
-        return Animation.easeInOut(duration: 0.5).delay(delay)
+        return Animation.easeInOut(duration: Constants.dealAnimationDuration).delay(delay)
     }
 
 //    private var firstPlayerButton: some View {

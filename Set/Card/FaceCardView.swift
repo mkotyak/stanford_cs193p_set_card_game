@@ -26,7 +26,7 @@ struct FaceCardView: View {
                     .foregroundColor(strokeColor)
 
                 if isColorBlindModeEnabled {
-                    colorBlindBlock
+                    colorBlindView
                 }
 
                 VStack {
@@ -44,7 +44,7 @@ struct FaceCardView: View {
         }
     }
 
-    private var colorBlindBlock: some View {
+    private var colorBlindView: some View {
         VStack(alignment: .leading) {
             Text("\(contentColorDefinition)")
                 .font(.system(size: Constants.colorTextFontSize))
