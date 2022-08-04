@@ -4,7 +4,7 @@ struct CardModel: Hashable, Identifiable {
     let id = UUID()
     let content: CardContentModel
     var state: CardState
-    var isFaceUp: Bool = false
+    var isCardFaceUp: Bool = true
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id.hashValue)

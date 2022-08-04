@@ -12,6 +12,7 @@ struct GameView: View {
         static let deckBlockWidth: CGFloat = 60
         static let deckBlockHeight: CGFloat = 90
         static let deckTextSize: CGFloat = 10
+        static let defaultCardsOnScreenCount: Int = 12
     }
 
     @ObservedObject var gameViewModel: GameViewModel
@@ -20,16 +21,16 @@ struct GameView: View {
 
     var body: some View {
         VStack {
-            gameBlock
+            gameBodyView
             HStack {
-                deckBlock
+                deckView
                 Spacer()
                 // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 Text("Score: \(gameViewModel.score)")
                     .bold()
                 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 Spacer()
-                discardPileBlock
+                discardPileView
             }
             .padding(.horizontal, 30)
 
@@ -74,7 +75,7 @@ struct GameView: View {
         )
     }
 
-    private var gameBlock: some View {
+    private var gameBodyView: some View {
         AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
             cardViewBuilder.build(
                 for: card,
@@ -86,7 +87,7 @@ struct GameView: View {
             }
         }
         .onAppear {
-            for i in 0 ..< 12 {
+            for i in 0 ..< Constants.defaultCardsOnScreenCount {
                 withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
                     gameViewModel.deal(card: gameViewModel.deck[i])
                 }
@@ -94,7 +95,7 @@ struct GameView: View {
         }
     }
 
-    private var discardPileBlock: some View {
+    private var discardPileView: some View {
         VStack {
             RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
                 .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
@@ -103,7 +104,7 @@ struct GameView: View {
         }
     }
 
-    private var deckBlock: some View {
+    private var deckView: some View {
         VStack {
             ZStack {
                 ForEach(gameViewModel.deck) { card in

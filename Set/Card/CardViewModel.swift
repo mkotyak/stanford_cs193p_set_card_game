@@ -15,7 +15,7 @@ class CardViewModel: ObservableObject {
     }
     
     var cardIsFaceUp: Bool {
-        card.isFaceUp
+        card.isCardFaceUp
     }
     
     var backroundColor: Color {
