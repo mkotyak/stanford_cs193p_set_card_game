@@ -60,10 +60,14 @@ struct GameView: View {
         }
         .navigationTitle("\(gameViewModel.timerTitle)")
         .navigationBarTitleDisplayMode(.inline)
-//        .navigationBarBackButtonHidden(true)
         .navigationBarItems(
             trailing: Button {
                 gameViewModel.startNewGame()
+                for i in 0 ..< Constants.defaultCardsOnScreenCount {
+                    withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
+                        gameViewModel.deal(card: gameViewModel.deck[i])
+                    }
+                }
             } label: {
                 newGameButton
             }
