@@ -98,12 +98,14 @@ struct GameView: View {
 
     private var discardPileView: some View {
         VStack {
-            RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
-                .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
-                .frame(
-                    width: Constants.discardPileBlockWidth,
-                    height: Constants.discardPileBlockHeight
-                )
+            ZStack {
+                RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
+                    .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
+                    .frame(
+                        width: Constants.discardPileBlockWidth,
+                        height: Constants.discardPileBlockHeight
+                    )
+            }
             Text("Discard pile").font(.system(size: Constants.deckTextSize))
         }
     }

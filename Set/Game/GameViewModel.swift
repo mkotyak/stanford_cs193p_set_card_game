@@ -5,7 +5,7 @@ class GameViewModel: ObservableObject {
     private enum Constants {
         static let playerTurnDuration: Int = 10
         static let timerFireInterval: TimeInterval = 1.0
-        static let matchAnimationDuration: Double = 0.5
+        static let matchAnimationDuration: Double = 1
     }
     
     @Published private var gameModel: GameModel

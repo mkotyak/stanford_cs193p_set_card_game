@@ -41,6 +41,9 @@ struct FaceCardView: View {
                     .foregroundColor(contentColor)
                 }
             }
+            .rotation3DEffect(Angle(degrees: strokeColor == .green ? 360 : 0),
+                                axis: (x: 1, y: 1, z: 1))
+            .animation(Animation.linear(duration: 1), value: strokeColor)
         }
     }
 
