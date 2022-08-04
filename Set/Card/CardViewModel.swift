@@ -14,6 +14,10 @@ class CardViewModel: ObservableObject {
         self.isColorBlindModeEnabled = isColorBlindModeEnabled
     }
     
+    var cardIsFaceUp: Bool {
+        card.isCardFaceUp
+    }
+    
     var backroundColor: Color {
         if card.state == .isSelected {
             return Color.gray.opacity(Constants.selectedCardOpacity)

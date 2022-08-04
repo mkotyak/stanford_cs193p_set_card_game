@@ -154,4 +154,8 @@ class GameViewModel: ObservableObject {
         // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         select(card)
     }
+    
+    func deal(card: CardModel) {
+        gameModel.deal(card: card)
+    }
 }

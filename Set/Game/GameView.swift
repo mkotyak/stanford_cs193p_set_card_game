@@ -5,44 +5,35 @@ struct GameView: View {
         static let buttonFrameWidth: CGFloat = 95
         static let buttonFrameHeight: CGFloat = 30
         static let buttonCornerRadius: CGFloat = 10
+        static let discardPileBlockWidth: CGFloat = 50
+        static let discardPileBlockHeight: CGFloat = 80
+        static let discardPileBlockCornerRadius: CGFloat = 15
+        static let discardPileBlockBorderLines: CGFloat = 2
+        static let deckBlockWidth: CGFloat = 60
+        static let deckBlockHeight: CGFloat = 90
+        static let deckTextSize: CGFloat = 10
+        static let defaultCardsOnScreenCount: Int = 12
+        static let dealAnimationDuration: Double = 0.5
     }
 
     @ObservedObject var gameViewModel: GameViewModel
     let cardViewBuilder: CardViewBuilder
+    @Namespace private var dealingNamespace
 
     var body: some View {
         VStack {
-            AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
-                cardViewBuilder.build(
-                    for: card,
-                    isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
-                )
-                .onTapGesture {
-                    gameViewModel.didSelect(card: card)
-                }
+            gameBodyView
+            HStack {
+                deckView
+                Spacer()
+                // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                Text("Score: \(gameViewModel.score)")
+                    .bold()
+                // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                Spacer()
+                discardPileView
             }
-            .navigationTitle("\(gameViewModel.timerTitle)")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(
-                leading: Button {
-                    gameViewModel.dealThreeMoreCards()
-                } label: {
-                    threeMoreCardsButton
-                }
-                .disabled(gameViewModel.isMoreCardAvailable),
-
-                trailing: Button {
-                    gameViewModel.startNewGame()
-                } label: {
-                    newGameButton
-                }
-            )
-
-            // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-            Text("Score: \(gameViewModel.score)")
-                .bold()
-            // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            .padding(.horizontal, 30)
 
 //            HStack {
 //                Button {
@@ -66,6 +57,71 @@ struct GameView: View {
 //            }
 //            .padding()
         }
+        .navigationTitle("\(gameViewModel.timerTitle)")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: Button {
+                gameViewModel.dealThreeMoreCards()
+            } label: {
+                threeMoreCardsButton
+            }
+            .disabled(gameViewModel.isMoreCardAvailable),
+
+            trailing: Button {
+                gameViewModel.startNewGame()
+            } label: {
+                newGameButton
+            }
+        )
+    }
+
+    private var gameBodyView: some View {
+        AspectVGrid(items: gameViewModel.cardsOnScreen, aspectRatio: 2 / 3) { card in
+            cardViewBuilder.build(
+                for: card,
+                isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+            )
+            .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+            .onTapGesture {
+                gameViewModel.didSelect(card: card)
+            }
+        }
+        .onAppear {
+            for i in 0 ..< Constants.defaultCardsOnScreenCount {
+                withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
+                    gameViewModel.deal(card: gameViewModel.deck[i])
+                }
+            }
+        }
+    }
+
+    private var discardPileView: some View {
+        VStack {
+            RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
+                .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
+                .frame(
+                    width: Constants.discardPileBlockWidth,
+                    height: Constants.discardPileBlockHeight
+                )
+            Text("Discard pile").font(.system(size: Constants.deckTextSize))
+        }
+    }
+
+    private var deckView: some View {
+        VStack {
+            ZStack {
+                ForEach(gameViewModel.deck) { card in
+                    cardViewBuilder.build(
+                        for: card,
+                        isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+                    )
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                }
+            }
+            .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
+            Text("Deck").font(.system(size: Constants.deckTextSize))
+        }
     }
 
     private var threeMoreCardsButton: some View {
@@ -82,6 +138,14 @@ struct GameView: View {
             .background(.black)
             .foregroundColor(.white)
             .cornerRadius(Constants.buttonCornerRadius)
+    }
+
+    private func dealAnimation(for card: CardModel) -> Animation {
+        var delay = 0.0
+        if let index = gameViewModel.deck.firstIndex(where: { $0.id == card.id }) {
+            delay = Double(index) * 2 / Double(12)
+        }
+        return Animation.easeInOut(duration: Constants.dealAnimationDuration).delay(delay)
     }
 
 //    private var firstPlayerButton: some View {
