@@ -27,36 +27,15 @@ struct GameView: View {
             HStack {
                 deckView
                 Spacer()
-                // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 Text("Score: \(gameViewModel.score)")
                     .bold()
-                // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 Spacer()
                 discardPileView
             }
             .padding(.horizontal, 30)
-
-//            HStack {
-//                Button {
-//                    gameViewModel.didSelect(player: gameViewModel.firstPlayer)
-//                } label: {
-//                    firstPlayerButton
-//                }
-//                .disabled(gameViewModel.isSecondPlayerActive)
-//
-//                Spacer()
-//                Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
-//                    .font(.largeTitle)
-//                Spacer()
-//
-//                Button {
-//                    gameViewModel.didSelect(player: gameViewModel.secondPlayer)
-//                } label: {
-//                    secondPlayerButton
-//                }
-//                .disabled(gameViewModel.isFirstPlayerActive)
-//            }
-//            .padding()
+        }
+        .onDisappear {
+            gameViewModel.startNewGame()
         }
         .navigationTitle("\(gameViewModel.timerTitle)")
         .navigationBarTitleDisplayMode(.inline)
@@ -155,20 +134,4 @@ struct GameView: View {
         }
         return Animation.easeInOut(duration: Constants.dealAnimationDuration).delay(delay)
     }
-
-//    private var firstPlayerButton: some View {
-//        Text("\(gameViewModel.firstPlayer.name)")
-//            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-//            .background(gameViewModel.firstPlayerButtonColor)
-//            .foregroundColor(.white)
-//            .cornerRadius(Constants.buttonCornerRadius)
-//    }
-//
-//    private var secondPlayerButton: some View {
-//        Text("\(gameViewModel.secondPlayer.name)")
-//            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-//            .background(gameViewModel.secondPlayerButtonColor)
-//            .foregroundColor(.white)
-//            .cornerRadius(Constants.buttonCornerRadius)
-//    }
 }

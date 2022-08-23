@@ -18,8 +18,6 @@ struct GameModel {
 
     var score: Int
     let deckBuilder: DeckBuilder
-//    var firstPlayer: Player
-//    var secondPlayer: Player
     var startGameDate: Date
     var previousSuccesfullMatchDate: Date?
     var previousTurnDuration: TimeInterval?
@@ -27,12 +25,8 @@ struct GameModel {
     
     init(
         deckBuilder: DeckBuilder
-//        firstPlayer: Player,
-//        secondPlayer: Player
     ) {
         self.deckBuilder = deckBuilder
-//        self.firstPlayer = firstPlayer
-//        self.secondPlayer = secondPlayer
         startGameDate = .now
         score = 0
         startNewGame()
@@ -68,7 +62,6 @@ struct GameModel {
         recalculateAvailableSetsOnScreen()
     }
     
-//    mutating func makeTurn(for cardId: UUID, player: Player) -> MatchSuccessStatus {
     mutating func makeTurn(for cardId: UUID) -> MatchSuccessStatus {
         guard let chousenIndex = cardsOnTheScreen.firstIndex(where: { $0.id == cardId }) else {
             return .noMatch
@@ -100,7 +93,6 @@ struct GameModel {
             
             mark(selectedCards, as: .isMatchedSuccessfully)
             increaseScore(value: bonus)
-//            increaseScore(playerID: player.id, value: bonus)
             previousSuccesfullMatchDate = currentSuccesfullMatchDate
             previousTurnDuration = currentTurnDuration
             
@@ -108,8 +100,7 @@ struct GameModel {
         } else {
             mark(selectedCards, as: .isMatchedUnsuccessfully)
             decreaseScore(value: Constants.defaultPenalty)
-//            decreaseScore(playerID: player.id, value: Constants.defaultPenalty)
-    
+            
             return .unsuccessfulMatch
         }
     }
@@ -157,29 +148,11 @@ struct GameModel {
         }
         return bonus
     }
-    
-//    private mutating func increaseScore(playerID: UUID, value: Int) {
-//        if playerID == firstPlayer.id {
-//            firstPlayer.increaseScore(by: value)
-//        } else if playerID == secondPlayer.id {
-//            secondPlayer.increaseScore(by: value)
-//        }
-//    }
-//
-//    private mutating func decreaseScore(playerID: UUID, value: Int) {
-//        if playerID == firstPlayer.id, firstPlayer.score != 0 {
-//            firstPlayer.decreaseScore(by: value)
-//        } else if playerID == secondPlayer.id, secondPlayer.score != 0 {
-//            secondPlayer.decreaseScore(by: value)
-//        }
-//    }
 
-    // function for solo version of the game
     private mutating func increaseScore(value: Int) {
         score += value
     }
     
-    // function for solo version of the game
     private mutating func decreaseScore(value: Int) {
         if score > 0 {
             score -= value
@@ -190,8 +163,6 @@ struct GameModel {
         deck = []
         cardsOnTheScreen = []
         score = 0
-//        firstPlayer.score = 0
-//        secondPlayer.score = 0
         previousTurnDuration = nil
         previousSuccesfullMatchDate = nil
         startGameDate = .now
