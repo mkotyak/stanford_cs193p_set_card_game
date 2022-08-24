@@ -30,6 +30,7 @@
 		FFB75B4D287C2D21005E2CD2 /* Shading.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4C287C2D21005E2CD2 /* Shading.swift */; };
 		FFB75B50287D6F15005E2CD2 /* DeckBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */; };
 		FFB75B54287E9514005E2CD2 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B53287E9514005E2CD2 /* AspectVGrid.swift */; };
+		FFEC595728B61E2B0064851E /* StackViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC595628B61E2B0064851E /* StackViewModifier.swift */; };
 		FFF6C6B4289B8D370022C3FD /* FaceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF6C6B3289B8D370022C3FD /* FaceCardView.swift */; };
 		FFF6C6B6289B8D440022C3FD /* BackCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF6C6B5289B8D440022C3FD /* BackCardView.swift */; };
 /* End PBXBuildFile section */
@@ -59,6 +60,7 @@
 		FFB75B4C287C2D21005E2CD2 /* Shading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shading.swift; sourceTree = "<group>"; };
 		FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBuilder.swift; sourceTree = "<group>"; };
 		FFB75B53287E9514005E2CD2 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
+		FFEC595628B61E2B0064851E /* StackViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewModifier.swift; sourceTree = "<group>"; };
 		FFF6C6B3289B8D370022C3FD /* FaceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceCardView.swift; sourceTree = "<group>"; };
 		FFF6C6B5289B8D440022C3FD /* BackCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */,
+				FFEC595628B61E2B0064851E /* StackViewModifier.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 			files = (
 				FFB75B4B287C2CFC005E2CD2 /* NumOfShapes.swift in Sources */,
 				FFA82E432888214F006BAAC5 /* MatchSuccessStatus.swift in Sources */,
+				FFEC595728B61E2B0064851E /* StackViewModifier.swift in Sources */,
 				FFB75B3E287C0B2A005E2CD2 /* GameViewModel.swift in Sources */,
 				FFA82E412886C899006BAAC5 /* CardState.swift in Sources */,
 				FFB75B54287E9514005E2CD2 /* AspectVGrid.swift in Sources */,

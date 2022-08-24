@@ -62,9 +62,11 @@ struct GameView: View {
             .matchedGeometryEffect(id: card.id, in: dealingNamespace)
             .onTapGesture {
                 let matchStatus = gameViewModel.didSelect(card: card)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak gameViewModel] in
-                    withAnimation(.easeInOut(duration: 1)) {
-                        gameViewModel?.finishTurn(matchStatus: matchStatus)
+                if matchStatus == .successfulMatch {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak gameViewModel] in
+                        withAnimation(.easeInOut(duration: 1)) {
+                            gameViewModel?.finishTurn(matchStatus: matchStatus)
+                        }
                     }
                 }
             }
@@ -79,42 +81,48 @@ struct GameView: View {
     }
 
     private var discardPileView: some View {
-        VStack {
-            ZStack {
-                ForEach(gameViewModel.playedCards) { card in
-                    cardViewBuilder.build(
-                        for: card,
-                        isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
-                    )
-                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+        ZStack {
+            VStack {
+                ZStack {
+                    ForEach(0..<gameViewModel.playedCards.count, id: \.self) { index in
+                        cardViewBuilder.build(
+                            for: gameViewModel.playedCards[index],
+                            isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+                        )
+                        .stacked(position: index, in: gameViewModel.playedCards.count)
+                        .matchedGeometryEffect(id: gameViewModel.playedCards[index].id, in: dealingNamespace)
+                    }
                 }
+                .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
+                Text("Discard pile").font(.system(size: Constants.deckTextSize))
             }
-            .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
-            Text("Discard pile").font(.system(size: Constants.deckTextSize))
         }
     }
 
     private var deckView: some View {
-        VStack {
-            ZStack {
-                ForEach(gameViewModel.deck) { card in
-                    cardViewBuilder.build(
-                        for: card,
-                        isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
-                    )
-                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                }
-            }
-            .onTapGesture {
-                for i in 0 ..< Constants.cardsToDealCount {
-                    withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
-                        gameViewModel.deal(card: gameViewModel.deck[i])
+        ZStack {
+            VStack {
+                ZStack {
+                    ForEach(0 ..< gameViewModel.deck.count, id: \.self) { index in
+                        cardViewBuilder.build(
+                            for: gameViewModel.deck[index],
+                            isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+                        )
+                        .stacked(position: index, in: gameViewModel.deck.count)
+                        .matchedGeometryEffect(id: gameViewModel.deck[index].id, in: dealingNamespace)
                     }
                 }
+                .onTapGesture {
+                    for i in 0 ..< Constants.cardsToDealCount {
+                        withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
+                            gameViewModel.deal(card: gameViewModel.deck[i])
+                        }
+                    }
+                }
+                .disabled(gameViewModel.isMoreCardAvailable)
+                .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
+                Text("Deck").font(.system(size: Constants.deckTextSize))
             }
-            .disabled(gameViewModel.isMoreCardAvailable)
-            .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
-            Text("Deck").font(.system(size: Constants.deckTextSize))
         }
     }
 
