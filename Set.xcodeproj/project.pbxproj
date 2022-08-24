@@ -31,8 +31,7 @@
 		FFB75B50287D6F15005E2CD2 /* DeckBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */; };
 		FFB75B54287E9514005E2CD2 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B53287E9514005E2CD2 /* AspectVGrid.swift */; };
 		FFEC595728B61E2B0064851E /* StackViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC595628B61E2B0064851E /* StackViewModifier.swift */; };
-		FFF6C6B4289B8D370022C3FD /* FaceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF6C6B3289B8D370022C3FD /* FaceCardView.swift */; };
-		FFF6C6B6289B8D440022C3FD /* BackCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF6C6B5289B8D440022C3FD /* BackCardView.swift */; };
+		FFEC595928B651AD0064851E /* CardifyViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC595828B651AD0064851E /* CardifyViewModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,8 +60,7 @@
 		FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBuilder.swift; sourceTree = "<group>"; };
 		FFB75B53287E9514005E2CD2 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		FFEC595628B61E2B0064851E /* StackViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewModifier.swift; sourceTree = "<group>"; };
-		FFF6C6B3289B8D370022C3FD /* FaceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceCardView.swift; sourceTree = "<group>"; };
-		FFF6C6B5289B8D440022C3FD /* BackCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackCardView.swift; sourceTree = "<group>"; };
+		FFEC595828B651AD0064851E /* CardifyViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardifyViewModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,8 +80,6 @@
 				FFB75B39287C0B02005E2CD2 /* CardView.swift */,
 				FF072BBD288158FA000C23DC /* CardViewModel.swift */,
 				FF072BC328816AB9000C23DC /* CardViewBuilder.swift */,
-				FFF6C6B3289B8D370022C3FD /* FaceCardView.swift */,
-				FFF6C6B5289B8D440022C3FD /* BackCardView.swift */,
 			);
 			path = Card;
 			sourceTree = "<group>";
@@ -177,6 +173,7 @@
 			children = (
 				FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */,
 				FFEC595628B61E2B0064851E /* StackViewModifier.swift */,
+				FFEC595828B651AD0064851E /* CardifyViewModifier.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -258,11 +255,11 @@
 				FFA82E412886C899006BAAC5 /* CardState.swift in Sources */,
 				FFB75B54287E9514005E2CD2 /* AspectVGrid.swift in Sources */,
 				FF072BC628816D56000C23DC /* GameViewBuilder.swift in Sources */,
+				FFEC595928B651AD0064851E /* CardifyViewModifier.swift in Sources */,
 				FFB75B2A287BF92D005E2CD2 /* ContentView.swift in Sources */,
 				FF072BBE288158FA000C23DC /* CardViewModel.swift in Sources */,
 				FFB75B28287BF92D005E2CD2 /* SetApp.swift in Sources */,
 				FF072BBB2881587B000C23DC /* CardModel.swift in Sources */,
-				FFF6C6B4289B8D370022C3FD /* FaceCardView.swift in Sources */,
 				FF072BC428816AB9000C23DC /* CardViewBuilder.swift in Sources */,
 				FFB75B49287C2CC7005E2CD2 /* ContentColor.swift in Sources */,
 				FFB75B40287C0B52005E2CD2 /* StartGameView.swift in Sources */,
@@ -271,7 +268,6 @@
 				FFB75B37287C0AC5005E2CD2 /* GameModel.swift in Sources */,
 				FFB75B3C287C0B12005E2CD2 /* GameView.swift in Sources */,
 				FFB75B4D287C2D21005E2CD2 /* Shading.swift in Sources */,
-				FFF6C6B6289B8D440022C3FD /* BackCardView.swift in Sources */,
 				FF6542E128917EA70023D199 /* StartGameViewModel.swift in Sources */,
 				FFB75B44287C2C4D005E2CD2 /* CardContentModel.swift in Sources */,
 				FFB75B50287D6F15005E2CD2 /* DeckBuilder.swift in Sources */,
