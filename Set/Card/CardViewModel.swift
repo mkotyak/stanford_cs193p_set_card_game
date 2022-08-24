@@ -100,4 +100,8 @@ class CardViewModel: ObservableObject {
             }
         }
     }
+    
+    var isHinted: Bool {
+        card.isHinted
+    }
 }

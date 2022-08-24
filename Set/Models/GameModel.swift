@@ -12,50 +12,38 @@ struct GameModel {
     
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
+    var playedCards: [CardModel] = []
     var isMoreSetsOnScreenAvailable: Bool {
         return availableSetsOnScreen.isEmpty
     }
 
     var score: Int
     let deckBuilder: DeckBuilder
-//    var firstPlayer: Player
-//    var secondPlayer: Player
     var startGameDate: Date
     var previousSuccesfullMatchDate: Date?
     var previousTurnDuration: TimeInterval?
-    var availableSetsOnScreen: [[CardModel]] = []
+    var availableSetsOnScreen: [[CardModel]] = [] {
+        didSet {
+            updateHints()
+        }
+    }
+    
+    private mutating func updateHints() {
+        let firstSetIDs = Set(availableSetsOnScreen.first?.map(\.id) ?? [])
+        for i in cardsOnTheScreen.indices {
+            cardsOnTheScreen[i].set(isHinted: firstSetIDs.contains(cardsOnTheScreen[i].id))
+        }
+    }
     
     init(
         deckBuilder: DeckBuilder
-//        firstPlayer: Player,
-//        secondPlayer: Player
     ) {
         self.deckBuilder = deckBuilder
-//        self.firstPlayer = firstPlayer
-//        self.secondPlayer = secondPlayer
         startGameDate = .now
         score = 0
         startNewGame()
     }
     
-    mutating func dealThreeMoreCards() {
-        guard !deck.isEmpty else {
-            return
-        }
-        
-        if !availableSetsOnScreen.isEmpty {
-            decreaseScore(value: 1)
-//            decreaseScore(playerID: firstPlayer.id, value: 1)
-//            decreaseScore(playerID: secondPlayer.id, value: 1)
-        }
-
-        for _ in 0 ..< min(Constants.cardsToDealCount, deck.count) {
-            let removedCard = deck.removeFirst()
-            cardsOnTheScreen.append(removedCard)
-        }
-        recalculateAvailableSetsOnScreen()
-    }
-
     mutating func startNewGame() {
         if !cardsOnTheScreen.isEmpty {
             resetGame()
@@ -73,18 +61,19 @@ struct GameModel {
     mutating func deal(card: CardModel) {
         
         guard !deck.isEmpty else {
+            debugPrint("Deck is empty")
             return
         }
-        
+                
         let index = deck.firstIndex(where: { $0.id == card.id })
         if let index = index {
+            deck[index].isCardFaceUp = true
             let cardToDeal = deck.remove(at: index)
             cardsOnTheScreen.append(cardToDeal)
         }
         recalculateAvailableSetsOnScreen()
     }
     
-//    mutating func makeTurn(for cardId: UUID, player: Player) -> MatchSuccessStatus {
     mutating func makeTurn(for cardId: UUID) -> MatchSuccessStatus {
         guard let chousenIndex = cardsOnTheScreen.firstIndex(where: { $0.id == cardId }) else {
             return .noMatch
@@ -116,7 +105,6 @@ struct GameModel {
             
             mark(selectedCards, as: .isMatchedSuccessfully)
             increaseScore(value: bonus)
-//            increaseScore(playerID: player.id, value: bonus)
             previousSuccesfullMatchDate = currentSuccesfullMatchDate
             previousTurnDuration = currentTurnDuration
             
@@ -124,8 +112,7 @@ struct GameModel {
         } else {
             mark(selectedCards, as: .isMatchedUnsuccessfully)
             decreaseScore(value: Constants.defaultPenalty)
-//            decreaseScore(playerID: player.id, value: Constants.defaultPenalty)
-    
+            
             return .unsuccessfulMatch
         }
     }
@@ -149,7 +136,8 @@ struct GameModel {
         for _ in cardsOnTheScreen {
             let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
             if let index = index {
-                cardsOnTheScreen.remove(at: index)
+                playedCards.append(cardsOnTheScreen.remove(at: index))
+                print("played cards count: \(playedCards.count)")
                 replaceMatchedCards(at: index)
             }
         }
@@ -173,29 +161,11 @@ struct GameModel {
         }
         return bonus
     }
-    
-//    private mutating func increaseScore(playerID: UUID, value: Int) {
-//        if playerID == firstPlayer.id {
-//            firstPlayer.increaseScore(by: value)
-//        } else if playerID == secondPlayer.id {
-//            secondPlayer.increaseScore(by: value)
-//        }
-//    }
-//
-//    private mutating func decreaseScore(playerID: UUID, value: Int) {
-//        if playerID == firstPlayer.id, firstPlayer.score != 0 {
-//            firstPlayer.decreaseScore(by: value)
-//        } else if playerID == secondPlayer.id, secondPlayer.score != 0 {
-//            secondPlayer.decreaseScore(by: value)
-//        }
-//    }
 
-    // function for solo version of the game
     private mutating func increaseScore(value: Int) {
         score += value
     }
     
-    // function for solo version of the game
     private mutating func decreaseScore(value: Int) {
         if score > 0 {
             score -= value
@@ -205,9 +175,8 @@ struct GameModel {
     private mutating func resetGame() {
         deck = []
         cardsOnTheScreen = []
+        playedCards = []
         score = 0
-//        firstPlayer.score = 0
-//        secondPlayer.score = 0
         previousTurnDuration = nil
         previousSuccesfullMatchDate = nil
         startGameDate = .now
@@ -253,7 +222,8 @@ struct GameModel {
             return
         }
         
-        let removedCard = deck.removeFirst()
+        var removedCard = deck.removeFirst()
+        removedCard.isCardFaceUp = true
         cardsOnTheScreen.insert(removedCard, at: index)
     }
     

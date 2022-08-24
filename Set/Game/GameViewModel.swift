@@ -4,8 +4,8 @@ import SwiftUI
 class GameViewModel: ObservableObject {
     private enum Constants {
         static let playerTurnDuration: Int = 10
-        static let timerFireInterval: TimeInterval = 1.0
-        static let matchAnimationDuration: Double = 0.5
+        static let timerFireInterval: TimeInterval = 0.8
+        static let matchAnimationDuration: Double = 1
     }
     
     @Published private var gameModel: GameModel
@@ -22,56 +22,21 @@ class GameViewModel: ObservableObject {
         gameModel.deck
     }
     
+    var playedCards: [CardModel] {
+        gameModel.playedCards
+    }
+    
     var isMoreCardAvailable: Bool {
         return deck.isEmpty
     }
     
-    // property for the solo version of the game
     var score: Int {
         gameModel.score
     }
     
-//    var firstPlayer: Player {
-//        gameModel.firstPlayer
-//    }
-//
-//    var secondPlayer: Player {
-//        gameModel.secondPlayer
-//    }
-    
-//    var isFirstPlayerActive: Bool {
-//        firstPlayer.id == whoseTurn?.id
-//    }
-//
-//    var isSecondPlayerActive: Bool {
-//        secondPlayer.id == whoseTurn?.id
-//    }
-    
-//    var whoseTurn: Player?
-    
     var moreCardsButtonColor: Color {
         isMoreCardAvailable ? .gray : .black
     }
-    
-//    var firstPlayerButtonColor: Color {
-//        if firstPlayer.id == whoseTurn?.id {
-//            return .green
-//        } else if secondPlayer.id == whoseTurn?.id {
-//            return .gray
-//        } else {
-//            return .black
-//        }
-//    }
-//
-//    var secondPlayerButtonColor: Color {
-//        if secondPlayer.id == whoseTurn?.id {
-//            return .green
-//        } else if firstPlayer.id == whoseTurn?.id {
-//            return .gray
-//        } else {
-//            return .black
-//        }
-//    }
     
     init(gameModel: GameModel, isColorBlindModeEnabled: Bool) {
         self.gameModel = gameModel
@@ -90,72 +55,54 @@ class GameViewModel: ObservableObject {
     }
     
     private func cleanUp() {
-//        whoseTurn = nil
         timer?.invalidate()
         timerTitle = ""
         countdown = Constants.playerTurnDuration
     }
         
     // MARK: - Inents
-    
-    func dealThreeMoreCards() {
-        gameModel.dealThreeMoreCards()
-    }
-    
+
     func startNewGame() {
         cleanUp()
         gameModel.startNewGame()
     }
         
-//    func select(_ card: CardModel, _ player: Player) {
-    func select(_ card: CardModel) {
+    func select(_ card: CardModel) -> MatchSuccessStatus {
         guard let timer = timer else {
-            return
+            return .unsuccessfulMatch
         }
         
         guard timer.isValid else {
-            return
+            return .unsuccessfulMatch
         }
         
         guard let chousenCard = cardsOnScreen.first(where: { $0.id == card.id }) else {
             print("Card is out of scope")
-            return
+            return .unsuccessfulMatch
         }
         
-//        let matchStatus = gameModel.makeTurn(for: chousenCard.id, player: player)
-        let matchStatus = gameModel.makeTurn(for: chousenCard.id)
-        if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.matchAnimationDuration) { [weak self] in
-                self?.gameModel.finishTurn(for: matchStatus)
-                self?.cleanUp()
-            }
-        }
+        return gameModel.makeTurn(for: chousenCard.id)
+//        if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.matchAnimationDuration) { [weak self] in
+//                self?.gameModel.finishTurn(for: matchStatus)
+//                self?.cleanUp()
+//            }
+//        }
     }
     
-//    func didSelect(player: Player) {
-//        whoseTurn = player
-//
-//        guard timer == nil || timer?.isValid == false else {
-//            return
-//        }
-//        startTimer()
-//    }
-    
-    func didSelect(card: CardModel) {
-//        guard let player = whoseTurn else {
-//            return
-//        }
-//        select(card, player)
-        
-        // code for the solo version of the game >>>>>>>>>>>
+    func didSelect(card: CardModel) -> MatchSuccessStatus {
         if timer == nil || timer?.isValid == false {
             startTimer()
         }
-        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        select(card)
+        return select(card)
     }
     
     func deal(card: CardModel) {
         gameModel.deal(card: card)
+    }
+    
+    func finishTurn(matchStatus: MatchSuccessStatus) {
+        gameModel.finishTurn(for: matchStatus)
+        cleanUp()
     }
 }

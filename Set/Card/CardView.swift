@@ -8,21 +8,20 @@ struct CardView: View {
     @ObservedObject var cardViewModel: CardViewModel
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                if cardViewModel.cardIsFaceUp {
-                    FaceCardView(
-                        backgroundColor: cardViewModel.backroundColor,
-                        strokeColor: cardViewModel.strokeColor,
-                        contentColor: cardViewModel.contentColor,
-                        isColorBlindModeEnabled: cardViewModel.isColorBlindModeEnabled,
-                        numOfShapes: cardViewModel.numOfShapes,
-                        shapeImage: cardViewModel.shapeImage,
-                        contentColorDefinition: cardViewModel.contentColorDefinition
-                    )
-                } else {
-                    BackCardView()
-                }
+        ZStack {
+            if cardViewModel.cardIsFaceUp {
+                FaceCardView(
+                    backgroundColor: cardViewModel.backroundColor,
+                    strokeColor: cardViewModel.strokeColor,
+                    contentColor: cardViewModel.contentColor,
+                    isColorBlindModeEnabled: cardViewModel.isColorBlindModeEnabled,
+                    numOfShapes: cardViewModel.numOfShapes,
+                    shapeImage: cardViewModel.shapeImage,
+                    contentColorDefinition: cardViewModel.contentColorDefinition,
+                    isHinted: cardViewModel.isHinted
+                )
+            } else {
+                BackCardView()
             }
         }
         .padding(.all, Constants.cardsPadding)

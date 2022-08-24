@@ -13,6 +13,7 @@ struct GameView: View {
         static let deckBlockHeight: CGFloat = 90
         static let deckTextSize: CGFloat = 10
         static let defaultCardsOnScreenCount: Int = 12
+        static let cardsToDealCount: Int = 3
         static let dealAnimationDuration: Double = 0.5
     }
 
@@ -26,50 +27,26 @@ struct GameView: View {
             HStack {
                 deckView
                 Spacer()
-                // code for the solo version of the game >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 Text("Score: \(gameViewModel.score)")
                     .bold()
-                // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                 Spacer()
                 discardPileView
             }
             .padding(.horizontal, 30)
-
-//            HStack {
-//                Button {
-//                    gameViewModel.didSelect(player: gameViewModel.firstPlayer)
-//                } label: {
-//                    firstPlayerButton
-//                }
-//                .disabled(gameViewModel.isSecondPlayerActive)
-//
-//                Spacer()
-//                Text("\(gameViewModel.firstPlayer.score) - \(gameViewModel.secondPlayer.score)")
-//                    .font(.largeTitle)
-//                Spacer()
-//
-//                Button {
-//                    gameViewModel.didSelect(player: gameViewModel.secondPlayer)
-//                } label: {
-//                    secondPlayerButton
-//                }
-//                .disabled(gameViewModel.isFirstPlayerActive)
-//            }
-//            .padding()
+        }
+        .onDisappear {
+            gameViewModel.startNewGame()
         }
         .navigationTitle("\(gameViewModel.timerTitle)")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
         .navigationBarItems(
-            leading: Button {
-                gameViewModel.dealThreeMoreCards()
-            } label: {
-                threeMoreCardsButton
-            }
-            .disabled(gameViewModel.isMoreCardAvailable),
-
             trailing: Button {
                 gameViewModel.startNewGame()
+                for i in 0 ..< Constants.defaultCardsOnScreenCount {
+                    withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
+                        gameViewModel.deal(card: gameViewModel.deck[i])
+                    }
+                }
             } label: {
                 newGameButton
             }
@@ -84,7 +61,12 @@ struct GameView: View {
             )
             .matchedGeometryEffect(id: card.id, in: dealingNamespace)
             .onTapGesture {
-                gameViewModel.didSelect(card: card)
+                let matchStatus = gameViewModel.didSelect(card: card)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak gameViewModel] in
+                    withAnimation(.easeInOut(duration: 1)) {
+                        gameViewModel?.finishTurn(matchStatus: matchStatus)
+                    }
+                }
             }
         }
         .onAppear {
@@ -98,12 +80,16 @@ struct GameView: View {
 
     private var discardPileView: some View {
         VStack {
-            RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
-                .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
-                .frame(
-                    width: Constants.discardPileBlockWidth,
-                    height: Constants.discardPileBlockHeight
-                )
+            ZStack {
+                ForEach(gameViewModel.playedCards) { card in
+                    cardViewBuilder.build(
+                        for: card,
+                        isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
+                    )
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                }
+            }
+            .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
             Text("Discard pile").font(.system(size: Constants.deckTextSize))
         }
     }
@@ -119,24 +105,28 @@ struct GameView: View {
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                 }
             }
+            .onTapGesture {
+                for i in 0 ..< Constants.cardsToDealCount {
+                    withAnimation(dealAnimation(for: gameViewModel.deck[i])) {
+                        gameViewModel.deal(card: gameViewModel.deck[i])
+                    }
+                }
+            }
+            .disabled(gameViewModel.isMoreCardAvailable)
             .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
             Text("Deck").font(.system(size: Constants.deckTextSize))
         }
     }
 
-    private var threeMoreCardsButton: some View {
-        Text("+3 cards")
-            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-            .background(gameViewModel.moreCardsButtonColor)
-            .foregroundColor(.white)
-            .cornerRadius(Constants.buttonCornerRadius)
-    }
-
     private var newGameButton: some View {
         Text("New game")
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-            .background(.black)
-            .foregroundColor(.white)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(lineWidth: 2)
+                    .fill(.blue)
+            )
+            .foregroundColor(.black)
             .cornerRadius(Constants.buttonCornerRadius)
     }
 
@@ -147,20 +137,4 @@ struct GameView: View {
         }
         return Animation.easeInOut(duration: Constants.dealAnimationDuration).delay(delay)
     }
-
-//    private var firstPlayerButton: some View {
-//        Text("\(gameViewModel.firstPlayer.name)")
-//            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-//            .background(gameViewModel.firstPlayerButtonColor)
-//            .foregroundColor(.white)
-//            .cornerRadius(Constants.buttonCornerRadius)
-//    }
-//
-//    private var secondPlayerButton: some View {
-//        Text("\(gameViewModel.secondPlayer.name)")
-//            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-//            .background(gameViewModel.secondPlayerButtonColor)
-//            .foregroundColor(.white)
-//            .cornerRadius(Constants.buttonCornerRadius)
-//    }
 }

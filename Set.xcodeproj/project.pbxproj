@@ -30,7 +30,6 @@
 		FFB75B4D287C2D21005E2CD2 /* Shading.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4C287C2D21005E2CD2 /* Shading.swift */; };
 		FFB75B50287D6F15005E2CD2 /* DeckBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */; };
 		FFB75B54287E9514005E2CD2 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB75B53287E9514005E2CD2 /* AspectVGrid.swift */; };
-		FFDD3819288AC47A00C9C14D /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDD3818288AC47A00C9C14D /* Player.swift */; };
 		FFF6C6B4289B8D370022C3FD /* FaceCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF6C6B3289B8D370022C3FD /* FaceCardView.swift */; };
 		FFF6C6B6289B8D440022C3FD /* BackCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF6C6B5289B8D440022C3FD /* BackCardView.swift */; };
 /* End PBXBuildFile section */
@@ -60,7 +59,6 @@
 		FFB75B4C287C2D21005E2CD2 /* Shading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shading.swift; sourceTree = "<group>"; };
 		FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckBuilder.swift; sourceTree = "<group>"; };
 		FFB75B53287E9514005E2CD2 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
-		FFDD3818288AC47A00C9C14D /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		FFF6C6B3289B8D370022C3FD /* FaceCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceCardView.swift; sourceTree = "<group>"; };
 		FFF6C6B5289B8D440022C3FD /* BackCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -116,7 +114,6 @@
 		FFB75B26287BF92D005E2CD2 /* Set */ = {
 			isa = PBXGroup;
 			children = (
-				FFDD3817288AC46C00C9C14D /* Player */,
 				FF072BC728817AC7000C23DC /* StartGame */,
 				FF072BBC288158D5000C23DC /* Card */,
 				FFB75B4E287D6EEE005E2CD2 /* Utilities */,
@@ -179,14 +176,6 @@
 				FFB75B4F287D6F15005E2CD2 /* DeckBuilder.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		FFDD3817288AC46C00C9C14D /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				FFDD3818288AC47A00C9C14D /* Player.swift */,
-			);
-			path = Player;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,7 +268,6 @@
 				FFB75B3C287C0B12005E2CD2 /* GameView.swift in Sources */,
 				FFB75B4D287C2D21005E2CD2 /* Shading.swift in Sources */,
 				FFF6C6B6289B8D440022C3FD /* BackCardView.swift in Sources */,
-				FFDD3819288AC47A00C9C14D /* Player.swift in Sources */,
 				FF6542E128917EA70023D199 /* StartGameViewModel.swift in Sources */,
 				FFB75B44287C2C4D005E2CD2 /* CardContentModel.swift in Sources */,
 				FFB75B50287D6F15005E2CD2 /* DeckBuilder.swift in Sources */,
