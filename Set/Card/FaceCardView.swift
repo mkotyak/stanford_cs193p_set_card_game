@@ -16,13 +16,14 @@ struct FaceCardView: View {
     let numOfShapes: Int
     let shapeImage: Image
     let contentColorDefinition: String
+    let isHinted: Bool
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 let shape = RoundedRectangle(cornerRadius: Constants.cornerRadius)
                 shape.fill(backgroundColor)
-                shape.strokeBorder(lineWidth: Constants.borderWidth)
+                shape.strokeBorder(lineWidth: Constants.borderWidth * (isHinted ? 3 : 1))
                     .foregroundColor(strokeColor)
 
                 if isColorBlindModeEnabled {

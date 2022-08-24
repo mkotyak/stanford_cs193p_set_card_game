@@ -22,6 +22,10 @@ class GameViewModel: ObservableObject {
         gameModel.deck
     }
     
+    var playedCards: [CardModel] {
+        gameModel.playedCards
+    }
+    
     var isMoreCardAvailable: Bool {
         return deck.isEmpty
     }
@@ -63,37 +67,42 @@ class GameViewModel: ObservableObject {
         gameModel.startNewGame()
     }
         
-    func select(_ card: CardModel) {
+    func select(_ card: CardModel) -> MatchSuccessStatus {
         guard let timer = timer else {
-            return
+            return .unsuccessfulMatch
         }
         
         guard timer.isValid else {
-            return
+            return .unsuccessfulMatch
         }
         
         guard let chousenCard = cardsOnScreen.first(where: { $0.id == card.id }) else {
             print("Card is out of scope")
-            return
+            return .unsuccessfulMatch
         }
         
-        let matchStatus = gameModel.makeTurn(for: chousenCard.id)
-        if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.matchAnimationDuration) { [weak self] in
-                self?.gameModel.finishTurn(for: matchStatus)
-                self?.cleanUp()
-            }
-        }
+        return gameModel.makeTurn(for: chousenCard.id)
+//        if matchStatus == .successfulMatch || matchStatus == .unsuccessfulMatch {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.matchAnimationDuration) { [weak self] in
+//                self?.gameModel.finishTurn(for: matchStatus)
+//                self?.cleanUp()
+//            }
+//        }
     }
     
-    func didSelect(card: CardModel) {
+    func didSelect(card: CardModel) -> MatchSuccessStatus {
         if timer == nil || timer?.isValid == false {
             startTimer()
         }
-        select(card)
+        return select(card)
     }
     
     func deal(card: CardModel) {
         gameModel.deal(card: card)
+    }
+    
+    func finishTurn(matchStatus: MatchSuccessStatus) {
+        gameModel.finishTurn(for: matchStatus)
+        cleanUp()
     }
 }

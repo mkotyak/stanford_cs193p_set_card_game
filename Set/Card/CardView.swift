@@ -17,7 +17,8 @@ struct CardView: View {
                     isColorBlindModeEnabled: cardViewModel.isColorBlindModeEnabled,
                     numOfShapes: cardViewModel.numOfShapes,
                     shapeImage: cardViewModel.shapeImage,
-                    contentColorDefinition: cardViewModel.contentColorDefinition
+                    contentColorDefinition: cardViewModel.contentColorDefinition,
+                    isHinted: cardViewModel.isHinted
                 )
             } else {
                 BackCardView()

@@ -12,6 +12,7 @@ struct GameModel {
     
     var deck: [CardModel] = []
     var cardsOnTheScreen: [CardModel] = []
+    var playedCards: [CardModel] = []
     var isMoreSetsOnScreenAvailable: Bool {
         return availableSetsOnScreen.isEmpty
     }
@@ -21,7 +22,18 @@ struct GameModel {
     var startGameDate: Date
     var previousSuccesfullMatchDate: Date?
     var previousTurnDuration: TimeInterval?
-    var availableSetsOnScreen: [[CardModel]] = []
+    var availableSetsOnScreen: [[CardModel]] = [] {
+        didSet {
+            updateHints()
+        }
+    }
+    
+    private mutating func updateHints() {
+        let firstSetIDs = Set(availableSetsOnScreen.first?.map(\.id) ?? [])
+        for i in cardsOnTheScreen.indices {
+            cardsOnTheScreen[i].set(isHinted: firstSetIDs.contains(cardsOnTheScreen[i].id))
+        }
+    }
     
     init(
         deckBuilder: DeckBuilder
@@ -124,7 +136,8 @@ struct GameModel {
         for _ in cardsOnTheScreen {
             let index = cardsOnTheScreen.firstIndex(where: { $0.state == .isMatchedSuccessfully })
             if let index = index {
-                cardsOnTheScreen.remove(at: index)
+                playedCards.append(cardsOnTheScreen.remove(at: index))
+                print("played cards count: \(playedCards.count)")
                 replaceMatchedCards(at: index)
             }
         }
@@ -162,6 +175,7 @@ struct GameModel {
     private mutating func resetGame() {
         deck = []
         cardsOnTheScreen = []
+        playedCards = []
         score = 0
         previousTurnDuration = nil
         previousSuccesfullMatchDate = nil
@@ -208,7 +222,8 @@ struct GameModel {
             return
         }
         
-        let removedCard = deck.removeFirst()
+        var removedCard = deck.removeFirst()
+        removedCard.isCardFaceUp = true
         cardsOnTheScreen.insert(removedCard, at: index)
     }
     

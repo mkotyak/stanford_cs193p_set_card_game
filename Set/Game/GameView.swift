@@ -61,7 +61,12 @@ struct GameView: View {
             )
             .matchedGeometryEffect(id: card.id, in: dealingNamespace)
             .onTapGesture {
-                gameViewModel.didSelect(card: card)
+                let matchStatus = gameViewModel.didSelect(card: card)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak gameViewModel] in
+                    withAnimation(.easeInOut(duration: 1)) {
+                        gameViewModel?.finishTurn(matchStatus: matchStatus)
+                    }
+                }
             }
         }
         .onAppear {
@@ -76,13 +81,15 @@ struct GameView: View {
     private var discardPileView: some View {
         VStack {
             ZStack {
-                RoundedRectangle(cornerRadius: Constants.discardPileBlockCornerRadius)
-                    .strokeBorder(lineWidth: Constants.discardPileBlockBorderLines)
-                    .frame(
-                        width: Constants.discardPileBlockWidth,
-                        height: Constants.discardPileBlockHeight
+                ForEach(gameViewModel.playedCards) { card in
+                    cardViewBuilder.build(
+                        for: card,
+                        isColorBlindModeEnabled: gameViewModel.isColorBlindModeEnabled
                     )
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                }
             }
+            .frame(width: Constants.deckBlockWidth, height: Constants.deckBlockHeight)
             Text("Discard pile").font(.system(size: Constants.deckTextSize))
         }
     }
@@ -111,19 +118,15 @@ struct GameView: View {
         }
     }
 
-    private var threeMoreCardsButton: some View {
-        Text("+3 cards")
-            .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-            .background(gameViewModel.moreCardsButtonColor)
-            .foregroundColor(.white)
-            .cornerRadius(Constants.buttonCornerRadius)
-    }
-
     private var newGameButton: some View {
         Text("New game")
             .frame(width: Constants.buttonFrameWidth, height: Constants.buttonFrameHeight)
-            .background(.black)
-            .foregroundColor(.white)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(lineWidth: 2)
+                    .fill(.blue)
+            )
+            .foregroundColor(.black)
             .cornerRadius(Constants.buttonCornerRadius)
     }
 
